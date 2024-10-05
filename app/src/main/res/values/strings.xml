@@ -1,3 +1,66 @@
 <resources>
-    <string name="app_name">LocationApp</string>
+    <string name="app_name">Car Rental</string>
+
+    <!-- Car 1 -->
+    <string name="car1Features">Car 1
+\nAir Conditioning
+\nAutomatic Transmission
+\n4 Doors
+\nSeats 5
+\nBluetooth Connectivity</string>
+    <string name="car1Desc">Car 1 is a comfortable and reliable vehicle, perfect for city driving or long road trips. It offers ample space and modern features to enhance your driving experience.</string>
+
+    <!-- Car 2 -->
+    <string name="car2Features">Car 2
+\nAll-Wheel Drive
+\nAutomatic Transmission
+\n5 Doors
+\nSeats 7
+\nNavigation System</string>
+    <string name="car2Desc">Car 2 provides the ultimate balance between space and power. Its great for family trips or outdoor adventures, offering extra room and advanced driving capabilities.</string>
+
+    <!-- Car 3 -->
+    <string name="car3Features">Car 3
+\nFuel Efficient
+\nManual Transmission
+\n2 Doors
+\nSeats 4
+\nUSB Charging</string>
+    <string name="car3Desc">Car 3 is ideal for city driving and quick getaways. Its small size makes parking and maneuvering in tight spaces a breeze, all while saving on fuel costs.</string>
+
+    <!-- Car 4 -->
+    <string name="car4Features">Car 4
+\nLeather Seats
+\nAutomatic Transmission
+\nPremium Sound System
+\nSeats 5
+\nSunroof</string>
+    <string name="car4Desc">Travel in style with Car 4, featuring premium comfort, high-end technology, and an elegant design. Perfect for business trips or special occasions.</string>
+
+    <!-- Car 5 -->
+    <string name="car5Features">Car 5
+\nZero Emissions
+\nAutomatic Transmission
+\nSeats 5
+\nFast Charging Capable
+\nAdvanced Driver Assistance</string>
+    <string name="car5Desc">Car 5 offers an eco-friendly solution without compromising on performance. With cutting-edge technology and fast charging options, its perfect for sustainable driving.</string>
+
+    <!-- Car 6 -->
+    <string name="car6Features">Car 6
+\nHigh Cargo Capacity
+\nAutomatic Transmission
+\nSeats 8
+\nRear Parking Sensors
+\nDual Climate Control</string>
+    <string name="car6Desc">Whether for transporting large groups or cargo, Car 6 provides the space and flexibility you need. Equipped with modern features for a comfortable and practical experience.</string>
+
+    <!-- Car 7 -->
+    <string name="car7Features">Car 7
+\nSporty Design
+\nAutomatic Transmission
+\nSeats 4
+\nBluetooth Audio
+\nSoft Top Roof</string>
+    <string name="car7Desc">Enjoy the open road with Car 7, a stylish convertible. Whether you re cruising along the coast or taking a scenic drive, this car adds a sense of freedom and excitement.</string>
 </resources>

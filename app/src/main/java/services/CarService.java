@@ -17,4 +17,7 @@ public interface CarService {
 
     @POST("api/car/verif/{id}") // The {id} is a path parameter
     Call<Boolean> verifyCarAvailability(@Path("id") String carId, @Body AvailabilityRequest request);
+
+    @POST("api/car")  // Endpoint for adding a new car
+    Call<Void> addCar(@Body Car car);
 }

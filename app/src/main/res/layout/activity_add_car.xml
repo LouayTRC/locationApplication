@@ -35,40 +35,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintTop_toBottomOf="@+id/add_car"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- Car Image -->
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="128dp"
-        android:layout_height="114dp"
+        android:id="@+id/image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/add_car"
+        android:contentDescription="@string/image_preview"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!-- Car Details Section -->
-    <TextView
-        android:id="@+id/car_details_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Car Details Section"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/add_car" />
 
     <!-- Model Name -->
-
     <TextView
         android:id="@+id/model_name_label"
         android:layout_width="wrap_content"
@@ -76,18 +55,17 @@
         android:layout_marginStart="16dp"
         android:text="Model Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/car_details_section" />
+        app:layout_constraintTop_toBottomOf="@+id/image_preview" />
 
     <EditText
         android:id="@+id/model_name_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/model_name_label"
-        app:layout_constraintTop_toBottomOf="@+id/car_details_section"
+        app:layout_constraintTop_toBottomOf="@+id/image_preview"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Year of Manufacture -->
-
     <TextView
         android:id="@+id/year_of_manufacture_label"
         android:layout_width="wrap_content"
@@ -105,169 +83,69 @@
         app:layout_constraintTop_toBottomOf="@+id/model_name_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Car Type -->
-
+    <!-- Price -->
     <TextView
-        android:id="@+id/car_type_label"
+        android:id="@+id/price_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Car Type"
+        android:text="Price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/year_of_manufacture_input" />
 
     <EditText
-        android:id="@+id/car_type_input"
+        android:id="@+id/price_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/car_type_label"
+        app:layout_constraintStart_toEndOf="@+id/price_label"
         app:layout_constraintTop_toBottomOf="@+id/year_of_manufacture_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Pricing and Availability -->
+    <!-- Features -->
     <TextView
-        android:id="@+id/pricing_availability_label"
+        android:id="@+id/features_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pricing and Availability"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/car_type_input"
+        android:layout_marginStart="16dp"
+        android:text="Features"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Price per Day -->
-
-    <TextView
-        android:id="@+id/price_per_day_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Price per Day"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pricing_availability_label" />
+        app:layout_constraintTop_toBottomOf="@+id/price_input" />
 
     <EditText
-        android:id="@+id/price_per_day_input"
+        android:id="@+id/features_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/price_per_day_label"
-        app:layout_constraintTop_toBottomOf="@+id/pricing_availability_label"
+        app:layout_constraintStart_toEndOf="@+id/features_label"
+        app:layout_constraintTop_toBottomOf="@+id/price_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Availability Dates -->
-
+    <!-- Description -->
     <TextView
-        android:id="@+id/availability_dates_label"
+        android:id="@+id/description_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Availability Dates"
+        android:layout_marginStart="16dp"
+        android:text="Description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/price_per_day_input" />
+        app:layout_constraintTop_toBottomOf="@+id/features_input" />
 
     <EditText
-        android:id="@+id/availability_dates_input"
+        android:id="@+id/description_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/availability_dates_label"
-        app:layout_constraintTop_toBottomOf="@+id/price_per_day_input"
+        app:layout_constraintStart_toEndOf="@+id/description_label"
+        app:layout_constraintTop_toBottomOf="@+id/features_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Car Features -->
-    <TextView
-        android:id="@+id/car_features_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Car Features"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/availability_dates_input"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Transmission Type -->
-
-    <TextView
-        android:id="@+id/transmission_type_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Transmission Type"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/car_features_label" />
-
-    <EditText
-        android:id="@+id/transmission_type_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/transmission_type_label"
-        app:layout_constraintTop_toBottomOf="@+id/car_features_label"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Fuel Type -->
-
-    <TextView
-        android:id="@+id/fuel_type_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Fuel Type"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transmission_type_input" />
-
-    <EditText
-        android:id="@+id/fuel_type_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/fuel_type_label"
-        app:layout_constraintTop_toBottomOf="@+id/transmission_type_input"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Additional Details -->
-    <TextView
-        android:id="@+id/additional_details_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Additional Details"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/fuel_type_input"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Insurance Options -->
-
-    <TextView
-        android:id="@+id/insurance_options_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:text="Insurance Options"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/additional_details_label" />
-
-    <EditText
-        android:id="@+id/insurance_options_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/insurance_options_label"
-        app:layout_constraintTop_toBottomOf="@+id/additional_details_label"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Images of the Car -->
+    <!-- Select Images -->
     <Button
         android:id="@+id/button_select_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Select Images"
-        android:textColorLink="#423333"
+        android:text="Select Image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/insurance_options_input" />
+        app:layout_constraintTop_toBottomOf="@+id/description_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

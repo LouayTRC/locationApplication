@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 
 public interface CarService {
 
-    @GET("api/car") // Replace with your actual endpoint
+    @GET("api/car")
     Call<List<Car>> getCars();
 
     @POST("api/car/verif/{id}") // The {id} is a path parameter

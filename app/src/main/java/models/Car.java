@@ -1,6 +1,7 @@
 package models;
 
 public class Car {
+    public String _id;
     public String model;
     public Integer year;
     public double price;

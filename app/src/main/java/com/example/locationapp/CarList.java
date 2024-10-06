@@ -45,6 +45,7 @@ public class CarList extends AppCompatActivity {
                 intent.putExtra("features", selectedCar.features);
                 intent.putExtra("description", selectedCar.description);
                 intent.putExtra("picture", selectedCar.picture);
+                intent.putExtra("_id",selectedCar._id);
                 startActivity(intent);
             }
         });

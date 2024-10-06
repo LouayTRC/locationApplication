@@ -96,6 +96,12 @@ public class CarList extends AppCompatActivity {
         });
     }
 
+    public void goToAddCar(View view){
+
+        Intent intent = new Intent(CarList.this, AddCar.class);
+        startActivity(intent);
+    }
+
     private void filter(String text) {
         filteredList.clear();
         if (text.isEmpty()) {

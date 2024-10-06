@@ -7,12 +7,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DetailedActivity">
+    tools:context=".CarDetails">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detailName"
+        android:id="@+id/detailModel"
         android:layout_marginTop="14dp"
         android:text="Car Name"
         android:textSize="24sp"
@@ -86,6 +86,6 @@
         android:text="@string/car1Desc"
         android:layout_marginStart="10dp"
         android:textSize="16sp"
-        android:id="@+id/detailDesc"/>
+        android:id="@+id/detailDescription"/>
 
 </LinearLayout>

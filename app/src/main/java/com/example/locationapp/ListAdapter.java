@@ -13,15 +13,17 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class ListAdapter extends ArrayAdapter<ListData> {
-    public ListAdapter(@NonNull Context context, ArrayList<ListData> dataArrayList) {
+import models.Car;
+
+public class ListAdapter extends ArrayAdapter<Car> {
+    public ListAdapter(@NonNull Context context, ArrayList<Car> dataArrayList) {
         super(context, R.layout.list_item, dataArrayList);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-        ListData listData = getItem(position);
+        Car car = getItem(position);
 
         if (view == null){
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
@@ -31,9 +33,9 @@ public class ListAdapter extends ArrayAdapter<ListData> {
         TextView listName = view.findViewById(R.id.listName);
         TextView listTime = view.findViewById(R.id.listPrice);
 
-        listImage.setImageResource(listData.image);
-        listName.setText(listData.name);
-        listTime.setText(listData.price);
+        listImage.setImageResource(R.drawable.car1);
+        listName.setText(car.model);
+        listTime.setText(String.valueOf(car.price));
 
         return view;
     }

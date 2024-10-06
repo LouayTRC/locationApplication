@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.example.locationapp.databinding.ActivityDetailedBinding;
 
-public class DetailedActivity extends AppCompatActivity {
+public class CarDetails extends AppCompatActivity {
 
     ActivityDetailedBinding binding;
 
@@ -19,15 +19,15 @@ public class DetailedActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         if (intent != null){
-            String name = intent.getStringExtra("name");
-            String price = intent.getStringExtra("price");
-            int features = intent.getIntExtra("features", R.string.car1Features);
-            int desc = intent.getIntExtra("desc", R.string.car1Desc);
+            String name = intent.getStringExtra("model");
+            double price = intent.getDoubleExtra("price",0000);
+            String features = intent.getStringExtra("features");
+            String desc = intent.getStringExtra("description");
             int image = intent.getIntExtra("image", R.drawable.car1);
 
-            binding.detailName.setText(name);
-            binding.detailPrice.setText(price);
-            binding.detailDesc.setText(desc);
+            binding.detailModel.setText(name);
+            binding.detailPrice.setText(String.valueOf(price));
+            binding.detailDescription.setText(desc);
             binding.detailFeatures.setText(features);
             binding.detailImage.setImageResource(image);
         }

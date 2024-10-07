@@ -26,4 +26,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, CarList.class);
         startActivity(intent);
     }
+
+    public void goToSearchView(View view){
+
+        Intent intent = new Intent(MainActivity.this, SearchCars.class);
+        startActivity(intent);
+    }
 }

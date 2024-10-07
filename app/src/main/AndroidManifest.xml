@@ -16,6 +16,9 @@
         android:theme="@style/Theme.LocationApp"
         tools:targetApi="31">
         <activity
+            android:name=".SearchCars"
+            android:exported="false" />
+        <activity
             android:name=".AddCar"
             android:exported="false" />
         <activity

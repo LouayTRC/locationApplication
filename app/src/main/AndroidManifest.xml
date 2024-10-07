@@ -18,6 +18,11 @@
         <activity
             android:name=".CarResearch"
             android:exported="false" />
+            
+        <activity
+            
+            android:name=".AddCar"
+            android:exported="false" />
         <activity
             android:name=".CarList"
             android:exported="true" />

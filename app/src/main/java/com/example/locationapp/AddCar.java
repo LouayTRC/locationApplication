@@ -1,51 +1,49 @@
 package com.example.locationapp;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import Config.RetrofitClient;
 import models.Car;
+import models.Category;
+import models.Marque;
+import models.Requests.AddCarRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import services.CarService;
+import services.CategoryService;
+import services.MarqueService;
 
 public class AddCar extends AppCompatActivity {
-    private static final int IMAGE_PICK_REQUEST = 1;
-    private ImageView imagePreview;
-    private String imageBase64; // Holds the base64 encoded image
     private EditText modelInput, yearInput, priceInput, featuresInput, descriptionInput;
     private Button submitButton;
+    private Spinner categorySpinner;
+    private Spinner marqueSpinner;
+
+    private List<Marque> marques;
+    private List<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_car);
 
-        Button selectImageButton = findViewById(R.id.button_select_image);
-        imagePreview = findViewById(R.id.image_preview); // Initialize the ImageView
+        marqueSpinner = findViewById(R.id.spinner_marque);
+        categorySpinner = findViewById(R.id.spinner_category);
 
-        selectImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage(); // Call method to select image
-            }
-        });
+        fetchMarquesAndCategories();
 
         // Initialize the form fields
         modelInput = findViewById(R.id.model_name_input);
@@ -65,6 +63,71 @@ public class AddCar extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void fetchMarquesAndCategories() {
+        MarqueService marqueService = RetrofitClient.getRetrofitInstance().create(MarqueService.class);
+        CategoryService categoryService = RetrofitClient.getRetrofitInstance().create(CategoryService.class);
+
+        Call<List<Marque>> marqueCall = marqueService.getMarques();
+        marqueCall.enqueue(new Callback<List<Marque>>() {
+            @Override
+            public void onResponse(Call<List<Marque>> call, Response<List<Marque>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    marques = response.body();
+                    populateMarqueSpinner();
+                } else {
+                    Toast.makeText(AddCar.this, "Error fetching marques", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Marque>> call, Throwable t) {
+                Toast.makeText(AddCar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Call<List<Category>> categoryCall = categoryService.getCategorys();
+        categoryCall.enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    categories = response.body();
+                    populateCategorySpinner();
+                } else {
+                    Toast.makeText(AddCar.this, "Error fetching categories", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Toast.makeText(AddCar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void populateMarqueSpinner() {
+        List<String> marqueNames = new ArrayList<>();
+        marqueNames.add("Select a Marque");
+        for (Marque marque : marques) {
+            marqueNames.add(marque.name);
+        }
+
+        ArrayAdapter<String> marqueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, marqueNames);
+        marqueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        marqueSpinner.setAdapter(marqueAdapter);
+    }
+
+    private void populateCategorySpinner() {
+        List<String> categoryNames = new ArrayList<>();
+        categoryNames.add("Select a Category");
+        for (Category category : categories) {
+            categoryNames.add(category.name);
+        }
+
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(categoryAdapter);
     }
 
     private boolean validateInputs() {
@@ -121,16 +184,10 @@ public class AddCar extends AppCompatActivity {
             return false;
         }
 
-        // Check if an image is selected
-        if (imageBase64 == null || imageBase64.isEmpty()) {
-            Toast.makeText(this, "Please select an image.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         return true;
     }
 
-    private void sendNewCar(Car newCar) {
+    private void sendNewCar(AddCarRequest newCar) {
         // Create an instance of the Retrofit service
         CarService carService = RetrofitClient.getRetrofitInstance().create(CarService.class);
 
@@ -156,43 +213,6 @@ public class AddCar extends AppCompatActivity {
         });
     }
 
-    private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == IMAGE_PICK_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri selectedImageUri = data.getData();
-            try {
-                // Convert the selected image to a Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-
-                // Convert the Bitmap to a Base64 string
-                imageBase64 = encodeImageToBase64(bitmap);
-
-                // Set the Bitmap to the ImageView
-                imagePreview.setImageBitmap(bitmap); // Display the selected image
-                Toast.makeText(this, "Image selected and encoded!", Toast.LENGTH_SHORT).show();
-
-            } catch (IOException e) {
-                e.printStackTrace(); // Log the error for debugging
-                Toast.makeText(this, "Failed to process the image!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private String encodeImageToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
-
     private void saveCarData() {
         // Get data from form fields
         String model = modelInput.getText().toString();
@@ -201,12 +221,15 @@ public class AddCar extends AppCompatActivity {
         String features = featuresInput.getText().toString();
         String description = descriptionInput.getText().toString();
 
-        // Use the encoded image for the picture field
-        String picture = imageBase64;
+        // Get the selected category and marque names from the spinners
+        String selectedCategory = categorySpinner.getSelectedItem().toString();
+        String selectedMarque = marqueSpinner.getSelectedItem().toString();
 
-        // Create a new Car object with the form data
-        Car newCar = new Car(model, year, price, features, description, picture);
+        // Create a new Car object with the form data and selected category and marque
+        AddCarRequest newCar = new AddCarRequest(model, year, price, features, description, selectedMarque,selectedCategory);
 
+        // Call the method to send the new car data to the server
         sendNewCar(newCar);
     }
+
 }

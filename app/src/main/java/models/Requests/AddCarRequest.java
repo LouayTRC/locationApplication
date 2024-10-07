@@ -1,6 +1,6 @@
-package models;
+package models.Requests;
 
-public class Car {
+public class AddCarRequest {
     public String _id;
     public String model;
     public Integer year;
@@ -8,16 +8,15 @@ public class Car {
     public String features;
     public String description;
     public String picture;
-    public Marque marque;
-    public Category category;
+    public String marque;
+    public String category;
 
-    public Car(String model,Integer year,double price,String features,String description,String picture,Marque marque,Category category){
+    public AddCarRequest(String model,Integer year,double price,String features,String description,String marque,String category){
         this.model=model;
         this.year=year;
         this.price=price;
         this.features=features;
         this.description=description;
-        this.picture=picture;
         this.marque=marque;
         this.category=category;
     }

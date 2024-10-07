@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:onClick="goToCarResearch"
-        android:text="Research"
+        android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="16dp"
         tools:ignore="MissingConstraints" />
@@ -29,13 +29,6 @@
         android:text="Cars"
         android:onClick="goToCarList"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Search"
-        android:onClick="goToSearchView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

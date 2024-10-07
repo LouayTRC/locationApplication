@@ -6,17 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 import com.example.locationapp.databinding.ActivityDetailedBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import Config.RetrofitClient;
-import models.AvailabilityRequest;
+import models.Requests.AvailabilityRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -9,9 +9,9 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface CategoryService {
-    @GET("api/types")
+    @GET("api/category")
     Call<List<Category>> getCategorys();
 
-    @POST("api/types") // The {id} is a path parameter
+    @POST("api/category") // The {id} is a path parameter
     Call<Boolean> addCategory(@Body String name);
 }

@@ -1,35 +1,27 @@
 package com.example.locationapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.locationapp.databinding.ActivityMainBinding;
-
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
     }
 
-    public void goToCarList(View view){
-
+    // Méthode pour aller à l'activité CarList
+    public void goToCarList(View view) {
         Intent intent = new Intent(MainActivity.this, CarList.class);
         startActivity(intent);
     }
 
-    public void goToSearchView(View view){
-
-        Intent intent = new Intent(MainActivity.this, SearchCars.class);
+    // Méthode pour aller à l'activité CarResearch
+    public void goToCarResearch(View view) {
+        Intent intent = new Intent(MainActivity.this, CarResearch.class);
         startActivity(intent);
     }
 }

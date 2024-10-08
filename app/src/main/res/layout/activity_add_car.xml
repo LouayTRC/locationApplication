@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -47,6 +48,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_car" />
 
+    <!-- Categorie Spinner -->
+    <TextView
+        android:id="@+id/category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_preview" />
+
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/category_label"
+        app:layout_constraintTop_toBottomOf="@+id/image_preview"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Marque Spinner -->
+    <TextView
+        android:id="@+id/marque_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Marque"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_category" />
+
+    <Spinner
+        android:id="@+id/spinner_marque"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/marque_label"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_category"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Model Name -->
     <TextView
         android:id="@+id/model_name_label"
@@ -55,14 +92,14 @@
         android:layout_marginStart="16dp"
         android:text="Model Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_preview" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_marque" />
 
     <EditText
         android:id="@+id/model_name_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/model_name_label"
-        app:layout_constraintTop_toBottomOf="@+id/image_preview"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_marque"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Year of Manufacture -->
@@ -107,7 +144,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Features"
+        android:text="Boite Vitesse"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_input" />
 
@@ -137,40 +174,6 @@
         app:layout_constraintTop_toBottomOf="@+id/features_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/category_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Category"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_input" />
-
-    <Spinner
-        android:id="@+id/spinner_category"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/category_label"
-        app:layout_constraintTop_toBottomOf="@+id/description_input"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Marque Spinner -->
-    <TextView
-        android:id="@+id/marque_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Marque"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_category" />
-
-    <Spinner
-        android:id="@+id/spinner_marque"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/marque_label"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_category"
-        app:layout_constraintEnd_toEndOf="parent" />
     <!-- Select Images -->
     <Button
         android:id="@+id/button_select_image"
@@ -180,6 +183,6 @@
         android:text="Select Image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_category" />
+        app:layout_constraintTop_toBottomOf="@+id/description_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

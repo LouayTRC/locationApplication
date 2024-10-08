@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@drawable/bg"
+    android:background="@drawable/hoome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -13,25 +13,35 @@
         android:id="@+id/Button6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:text="Profile"
         android:onClick="goToCarResearch"
-        android:text="Search"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="16dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/goCars"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
 
     <Button
+        android:id="@+id/goCars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/goCars"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:text="Cars"
-        android:onClick="goToCarList"/>
+        android:onClick="goToCarList"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/Button6"
+        app:layout_constraintEnd_toStartOf="@id/Button7"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
+    <Button
+        android:id="@+id/Button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact Us"
+        android:onClick="goToCarResearch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-

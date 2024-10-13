@@ -3,15 +3,20 @@ package com.example.locationapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
+
 import com.example.locationapp.databinding.ActivityDetailedBinding;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import Config.RetrofitClient;
 import models.Requests.AvailabilityRequest;
@@ -19,16 +24,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import services.CarService;
+import services.PictureServiceImpl;
 
 public class CarDetails extends AppCompatActivity {
 
-    ActivityDetailedBinding binding;
+    private ActivityDetailedBinding binding;
+    private PictureServiceImpl pictureService;
+    private String startDateStr;
+    private String endDateStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailedBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        pictureService = new PictureServiceImpl();
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -37,69 +48,83 @@ public class CarDetails extends AppCompatActivity {
             binding.detailPrice.setText(String.valueOf(intent.getDoubleExtra("price", 0)));
             binding.detailDescription.setText(intent.getStringExtra("description"));
             binding.detailFeatures.setText(intent.getStringExtra("features"));
-            binding.detailImage.setImageResource(intent.getIntExtra("image", R.drawable.car1));
+
+            String encodedImage = intent.getStringExtra("picture");
+            if (encodedImage != null) {
+                setImageFromEncodedString(encodedImage);
+            } else {
+                binding.detailImage.setImageResource(R.drawable.car1); // Default image
+            }
+
+            binding.startDate.setOnClickListener(v -> showDatePickerDialog(true));
+            binding.endDate.setOnClickListener(v -> showDatePickerDialog(false));
             binding.checkAvailabilityButton.setOnClickListener(v -> checkAvailability(carId));
         }
-
     }
 
+    private void setImageFromEncodedString(String encodedImage) {
+        try {
+            Bitmap decodedBitmap = pictureService.decompressBase64ToImage(encodedImage);
+            binding.detailImage.setImageBitmap(decodedBitmap);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Error decoding image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showDatePickerDialog(boolean isStartDate) {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            String selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+            if (isStartDate) {
+                startDateStr = selectedDate;
+                binding.startDate.setText(selectedDate);
+            } else {
+                endDateStr = selectedDate;
+                binding.endDate.setText(selectedDate);
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
 
     private void checkAvailability(String carId) {
-        String startDateStr = binding.dateDebut.getText().toString().trim();
-        String endDateStr = binding.dateFin.getText().toString().trim();
-
-        if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
+        if (startDateStr == null || endDateStr == null) {
             Toast.makeText(this, "Select dates", Toast.LENGTH_SHORT).show();
             return;
         }
 
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             Date startDate = sdf.parse(startDateStr);
             Date endDate = sdf.parse(endDateStr);
 
-            assert startDate != null;
-            if (startDate.compareTo(endDate) > 0) {
+            if (startDate != null && startDate.after(endDate)) {
                 Toast.makeText(this, "Start date cannot be after End date", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-
             AvailabilityRequest request = new AvailabilityRequest(startDateStr, endDateStr);
-
-
             CarService service = RetrofitClient.getRetrofitInstance().create(CarService.class);
             Call<Boolean> call = service.verifyCarAvailability(carId, request);
-
 
             call.enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         Boolean isAvailable = response.body();
-                        if (isAvailable) {
-                            Toast.makeText(CarDetails.this, "Car is available !", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(CarDetails.this, "Car is not available.", Toast.LENGTH_LONG).show();
-                        }
+                        String message = isAvailable ? "Car is available" : "Car is not available";
+                        Toast.makeText(CarDetails.this, message, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(CarDetails.this, "Failed to check availability", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CarDetails.this, "Error checking availability", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
-                    Toast.makeText(CarDetails.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CarDetails.this, "API call failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
-        } catch (ParseException e) {
-            Toast.makeText(this, "Invalid date format. Use yyyy-MM-dd", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Date parsing error", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }

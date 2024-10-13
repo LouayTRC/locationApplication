@@ -11,7 +11,7 @@ public class AddCarRequest {
     public String marque;
     public String category;
 
-    public AddCarRequest(String model,Integer year,double price,String features,String description,String marque,String category){
+    public AddCarRequest(String model, Integer year, double price, String features, String description, String marque, String category, String picture){
         this.model=model;
         this.year=year;
         this.price=price;
@@ -19,5 +19,6 @@ public class AddCarRequest {
         this.description=description;
         this.marque=marque;
         this.category=category;
+        this.picture=picture;
     }
 }

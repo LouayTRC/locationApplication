@@ -19,7 +19,7 @@
         android:textSize="20sp"
         android:textColor="@color/lavender"
         android:textStyle="bold"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardImage"
@@ -35,7 +35,6 @@
             android:layout_width="380dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/car1" />
     </androidx.cardview.widget.CardView>
@@ -48,14 +47,16 @@
         android:textStyle="bold"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="price"
         android:layout_marginStart="10dp"
         android:textSize="12sp"
-        android:id="@+id/detailPrice"/>
+        android:id="@+id/detailPrice" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,14 +65,16 @@
         android:textStyle="bold"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/car1Features"
         android:layout_marginStart="10dp"
         android:textSize="16sp"
-        android:id="@+id/detailFeatures"/>
+        android:id="@+id/detailFeatures" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,58 +83,68 @@
         android:textStyle="bold"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/car1Desc"
         android:layout_marginStart="10dp"
         android:textSize="16sp"
-        android:id="@+id/detailDescription"/>
+        android:id="@+id/detailDescription" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/checkAvailabilityButton"
-        android:text="Check Availability !"
-        />
+        android:text="Check Availability!" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="0dp">
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start Date:"
             android:textSize="16sp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
 
         <EditText
-            android:id="@+id/dateDebut"
+            android:id="@+id/startDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:hint="yyyy-mm-dd"
-            android:inputType="date"
-            android:textSize="16sp"/>
+            android:hint="Select Start Date"
+            android:textSize="10sp"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:background="@android:drawable/edit_text" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="End Date:"
             android:textSize="16sp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp" />
 
         <EditText
-            android:id="@+id/dateFin"
+            android:id="@+id/endDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:hint="yyyy-mm-dd"
-            android:inputType="date"
-            android:textSize="16sp"/>
+            android:hint="Select End Date"
+            android:textSize="10sp"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:background="@android:drawable/edit_text" />
     </LinearLayout>
 
 </LinearLayout>

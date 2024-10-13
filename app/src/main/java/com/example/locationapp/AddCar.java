@@ -1,16 +1,22 @@
 package com.example.locationapp;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +31,16 @@ import retrofit2.Response;
 import services.CarService;
 import services.CategoryService;
 import services.MarqueService;
+import services.PictureService;
+import services.PictureServiceImpl;
 
 public class AddCar extends AppCompatActivity {
     private EditText modelInput, yearInput, priceInput, featuresInput, descriptionInput;
     private Button submitButton;
     private Spinner categorySpinner;
     private Spinner marqueSpinner;
-
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Bitmap selectedBitmap; // Keep track of selected image bitmap
     private List<Marque> marques;
     private List<Category> categories;
 
@@ -48,21 +57,41 @@ public class AddCar extends AppCompatActivity {
         // Initialize the form fields
         modelInput = findViewById(R.id.model_name_input);
         yearInput = findViewById(R.id.year_of_manufacture_input);
-        priceInput = findViewById(R.id.price_input); // Updated ID
-        featuresInput = findViewById(R.id.features_input);  // Updated ID
-        descriptionInput = findViewById(R.id.description_input); // Updated ID
+        priceInput = findViewById(R.id.price_input);
+        featuresInput = findViewById(R.id.features_input);
+        descriptionInput = findViewById(R.id.description_input);
+
+        Button selectImageButton = findViewById(R.id.button_select_image);
+        selectImageButton.setOnClickListener(v -> openImagePicker());
 
         submitButton = findViewById(R.id.submit_button);
-
         // Set click listener for the submit button
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateInputs()) {
-                    saveCarData();
-                }
+        submitButton.setOnClickListener(v -> {
+            if (validateInputs()) {
+                saveCarData();
             }
         });
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                selectedBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri); // Store selected bitmap
+                ImageView imageView = findViewById(R.id.image_preview);
+                imageView.setImageBitmap(selectedBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void fetchMarquesAndCategories() {
@@ -198,38 +227,47 @@ public class AddCar extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Show a success message
                     Toast.makeText(AddCar.this, "Car added successfully!", Toast.LENGTH_SHORT).show();
-                    finish(); // Optionally close the activity or clear fields
+                    finish(); // Optionally close the activity or redirect
                 } else {
-                    // Show an error message if the response wasn't successful
                     Toast.makeText(AddCar.this, "Failed to add car.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                // Handle errors (like network failure)
                 Toast.makeText(AddCar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void saveCarData() {
-        // Get data from form fields
+        // Retrieve input values
         String model = modelInput.getText().toString();
-        Integer year = Integer.parseInt(yearInput.getText().toString());
+        int year = Integer.parseInt(yearInput.getText().toString());
         double price = Double.parseDouble(priceInput.getText().toString());
         String features = featuresInput.getText().toString();
         String description = descriptionInput.getText().toString();
+        int selectedMarqueIndex = marqueSpinner.getSelectedItemPosition();
+        int selectedCategoryIndex = categorySpinner.getSelectedItemPosition();
 
-        // Get the selected category and marque names from the spinners
+        // Ensure a valid marque and category are selected
+        if (selectedMarqueIndex == 0 || selectedCategoryIndex == 0) {
+            Toast.makeText(this, "Please select a marque and a category.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Get selected marque and category objects
         String selectedCategory = categorySpinner.getSelectedItem().toString();
         String selectedMarque = marqueSpinner.getSelectedItem().toString();
 
-        // Create a new Car object with the form data and selected category and marque
-        AddCarRequest newCar = new AddCarRequest(model, year, price, features, description, selectedMarque,selectedCategory);
+        // Convert selected image bitmap to Base64
+        PictureService pictureService = new PictureServiceImpl();
+        String imageBase64 = pictureService.compressImageToBase64(selectedBitmap); // Pass the bitmap to this method
 
-        // Call the method to send the new car data to the server
+        // Create the new car request
+        AddCarRequest newCar = new AddCarRequest(model, year, price, features, description, selectedMarque, selectedCategory, imageBase64);
+
+        // Send the new car data
         sendNewCar(newCar);
     }
-
 }

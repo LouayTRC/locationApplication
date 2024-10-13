@@ -36,6 +36,8 @@ android {
 
 dependencies {
     implementation (libs.retrofit)
+    implementation("com.github.bumptech.glide:glide:4.15.0") // Glide library
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
     implementation (libs.converter.gson)
     implementation (libs.logging.interceptor)
     implementation(libs.appcompat)

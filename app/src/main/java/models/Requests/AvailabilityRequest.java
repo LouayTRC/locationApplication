@@ -1,4 +1,4 @@
-package models;
+package models.Requests;
 
 public class AvailabilityRequest {
     public String startDate;

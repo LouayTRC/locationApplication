@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocationApp"
         tools:targetApi="31">
+
+        <activity
+            android:name=".ReserveCar"
+            android:exported="false"
+           />
         <activity
             android:name=".MainActivity2"
             android:exported="false" />

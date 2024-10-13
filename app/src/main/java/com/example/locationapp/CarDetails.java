@@ -127,4 +127,11 @@ public class CarDetails extends AppCompatActivity {
             Toast.makeText(this, "Date parsing error", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    public void goToReserveCar(View view) {
+        Intent intent = new Intent(CarDetails.this, FirstReservation.class);
+        startActivity(intent);
+    }
+
 }

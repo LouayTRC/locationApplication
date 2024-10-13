@@ -147,4 +147,12 @@
             android:background="@android:drawable/edit_text" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToReserveCar"
+        android:text="Reserver" />
+
+
 </LinearLayout>

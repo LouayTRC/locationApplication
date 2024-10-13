@@ -8,6 +8,15 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="lavender">#8692f7</color>
+    <color name="green">#4CAF50</color> <!-- A solid green for acceptance -->
+    <color name="light_green">#81C784</color> <!-- A lighter green for button background -->
+    <color name="red">#F44336</color> <!-- A solid red for rejection -->
+    <color name="primaryButton">#A4D76C</color>
+    <color name="cancelRed">#FF6666</color>
+    <color name="checkGreen">#66FF66</color>
+    <color name="backgroundLight">#F2F2F2</color>
+    <color name="textBlack">#000000</color>
+    <color name="textGray">#888888</color>
 
 
 

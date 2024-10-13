@@ -64,4 +64,5 @@
 \nSoft Top Roof</string>
     <string name="image_preview">Preview of the selected image</string>
     <string name="car7Desc">Enjoy the open road with Car 7, a stylish convertible. Whether you re cruising along the coast or taking a scenic drive, this car adds a sense of freedom and excitement.</string>
+    <string name="title_activity_reserver_car">ReserverCar</string>
 </resources>

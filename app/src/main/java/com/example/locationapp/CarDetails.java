@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 import com.example.locationapp.databinding.ActivityDetailedBinding;
 
@@ -99,6 +100,23 @@ public class CarDetails extends AppCompatActivity {
             Toast.makeText(this, "Invalid date format. Use yyyy-MM-dd", Toast.LENGTH_SHORT).show();
         }
     }
+    public void goToReserveCar(View view) {
+        Intent intent = new Intent(CarDetails.this, ReserveCar.class);
+
+        // Ajouter les détails de la voiture dans l'intent
+        intent.putExtra("carId", getIntent().getStringExtra("_id"));
+        intent.putExtra("model", getIntent().getStringExtra("model"));
+        intent.putExtra("price", getIntent().getDoubleExtra("price", 0));
+        intent.putExtra("features", getIntent().getStringExtra("features"));
+        intent.putExtra("description", getIntent().getStringExtra("description"));
+        intent.putExtra("picture", getIntent().getStringExtra("picture"));
+        intent.putExtra("category", getIntent().getStringExtra("category"));  // Transmettre la catégorie
+        intent.putExtra("marque", getIntent().getStringExtra("marque"));      // Transmettre la marque
+
+        // Lancer l'activité ReserveCar avec les données
+        startActivity(intent);
+    }
+
 
 
 

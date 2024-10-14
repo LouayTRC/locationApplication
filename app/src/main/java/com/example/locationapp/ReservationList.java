@@ -28,7 +28,7 @@ public class ReservationList extends AppCompatActivity {
         reservationList = new ArrayList<>(); // Initialize as ArrayList
 
         // Add some mock data for now
-        reservationList.add(new Reservation("1", new Client("1", "Foulen Fouleni"),
+       /* reservationList.add(new Reservation("1", new Client("1", "Foulen Fouleni"),
                 new Car("Car Name", 2024, 100.0, "Features", "Description", "picture.png", null, null),
                 new Date(), new Date(), 1));
 
@@ -38,6 +38,6 @@ public class ReservationList extends AppCompatActivity {
 
         // Pass context and reservationList to the adapter
         reservationAdapter = new ReservationAdapter(this, reservationList); // Pass 'this' as context
-        rvReservationList.setAdapter(reservationAdapter);
+        rvReservationList.setAdapter(reservationAdapter);*/
     }
 }

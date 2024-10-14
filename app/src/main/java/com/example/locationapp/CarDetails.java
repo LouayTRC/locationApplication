@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -58,7 +59,7 @@ public class CarDetails extends AppCompatActivity {
 
             binding.startDate.setOnClickListener(v -> showDatePickerDialog(true));
             binding.endDate.setOnClickListener(v -> showDatePickerDialog(false));
-            binding.checkAvailabilityButton.setOnClickListener(v -> checkAvailability(carId));
+            binding.reserveButton.setOnClickListener(v -> goToReserveCar(carId));
         }
     }
 
@@ -86,7 +87,7 @@ public class CarDetails extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void checkAvailability(String carId) {
+    private void goToReserveCar(String carId) {
         if (startDateStr == null || endDateStr == null) {
             Toast.makeText(this, "Select dates", Toast.LENGTH_SHORT).show();
             return;
@@ -111,8 +112,15 @@ public class CarDetails extends AppCompatActivity {
                 public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         Boolean isAvailable = response.body();
-                        String message = isAvailable ? "Car is available" : "Car is not available";
-                        Toast.makeText(CarDetails.this, message, Toast.LENGTH_SHORT).show();
+                        if (isAvailable) {
+                            Intent intent = new Intent(CarDetails.this, FirstReservation.class);
+                            intent.putExtra("startDate", startDateStr);  // Pass start date as extra
+                            intent.putExtra("endDate", endDateStr);      // Pass end date as extra
+                            startActivity(intent);
+                        } else {
+                            String message = "Car is not available";
+                            Toast.makeText(CarDetails.this, message, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(CarDetails.this, "Error checking availability", Toast.LENGTH_SHORT).show();
                     }
@@ -129,9 +137,5 @@ public class CarDetails extends AppCompatActivity {
     }
 
 
-    public void goToReserveCar(View view) {
-        Intent intent = new Intent(CarDetails.this, FirstReservation.class);
-        startActivity(intent);
-    }
 
 }

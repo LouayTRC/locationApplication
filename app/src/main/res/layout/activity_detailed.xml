@@ -96,8 +96,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkAvailabilityButton"
-        android:text="Check Availability!" />
+        android:id="@+id/reserveButton"
+        android:text="Reserve it !" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -147,12 +147,7 @@
             android:background="@android:drawable/edit_text" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="goToReserveCar"
-        android:text="Reserver" />
 
+a
 
 </LinearLayout>

@@ -2,10 +2,9 @@ package models;
 
 public class Client {
     public String _id; // Client ID from MongoDB
-    public String user; // User ID that the client references
+    public User user; // User ID that the client references
 
-    public Client(String _id, String user) {
-        this._id = _id;
+    public Client(User user) {
         this.user = user;
     }
 

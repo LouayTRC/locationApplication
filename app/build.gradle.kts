@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -41,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -54,7 +56,9 @@ android {
 
 dependencies {
     implementation (libs.retrofit)
-    implementation("com.github.bumptech.glide:glide:4.15.0") // Glide library
+    implementation(libs.osmdroid.android.v6120)
+    implementation("com.github.bumptech.glide:glide:4.15.0")
+    implementation(libs.play.services.maps) // Glide library
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
     implementation (libs.converter.gson)
     implementation (libs.logging.interceptor)

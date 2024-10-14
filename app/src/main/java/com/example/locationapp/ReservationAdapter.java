@@ -48,7 +48,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
         holder.tvCarName.setText(reservation.car.model); // Assuming car has a model property
-        holder.tvClientName.setText(reservation.client.user); // Assuming client has a user property
+        holder.tvClientName.setText(reservation.client.user.getName()); // Assuming client has a user property
 
         // You can set the check and cancel icons based on reservation status
         if (reservation.status == 1) {

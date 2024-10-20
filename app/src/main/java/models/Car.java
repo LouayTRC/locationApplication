@@ -10,6 +10,7 @@ public class Car {
     public String picture;
     public Marque marque;
     public Category category;
+    public Integer status;
 
     public Car(String model,Integer year,double price,String features,String description,String picture,Marque marque,Category category){
         this.model=model;
@@ -20,6 +21,7 @@ public class Car {
         this.picture=picture;
         this.marque=marque;
         this.category=category;
+        this.status=status;
     }
     public String getId() {
         return _id;
@@ -36,4 +38,8 @@ public class Car {
     public double getPrice() {
         return price;
     }
+    public Integer getStatus() {
+        return status;
+    }
+
 }

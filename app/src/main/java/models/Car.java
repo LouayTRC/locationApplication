@@ -21,4 +21,19 @@ public class Car {
         this.marque=marque;
         this.category=category;
     }
+    public String getId() {
+        return _id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getBrand() {
+        return model;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 }

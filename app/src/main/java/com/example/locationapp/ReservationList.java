@@ -1,43 +1,65 @@
 package com.example.locationapp;
 
-import models.Client; // Ensure this import is present
-import models.Car; // Ensure this import is present
-import models.Reservation; // Ensure this import is present
 import android.os.Bundle;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList; // Make sure to import ArrayList
-import java.util.Date;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Config.RetrofitClient;
+import models.Reservation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.ReservationService;
 
 public class ReservationList extends AppCompatActivity {
 
-    private RecyclerView rvReservationList;
+    private RecyclerView recyclerView;
     private ReservationAdapter reservationAdapter;
-    private ArrayList<Reservation> reservationList; // Change to ArrayList
+    private List<Reservation> reservationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_reservations_activity);
 
-        rvReservationList = findViewById(R.id.rvReservationList);
-        rvReservationList.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = findViewById(R.id.rvReservationList);
+        reservationList = new ArrayList<>();
 
-        // Initialize reservation list (mock data or fetch from database)
-        reservationList = new ArrayList<>(); // Initialize as ArrayList
+        // Configure RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reservationAdapter = new ReservationAdapter(reservationList);
+        recyclerView.setAdapter(reservationAdapter);
 
-        // Add some mock data for now
-       /* reservationList.add(new Reservation("1", new Client("1", "Foulen Fouleni"),
-                new Car("Car Name", 2024, 100.0, "Features", "Description", "picture.png", null, null),
-                new Date(), new Date(), 1));
+        // Fetch reservations from the API
+        fetchReservations();
+    }
 
-        reservationList.add(new Reservation("2", new Client("2", "John Doe"),
-                new Car("Another Car", 2023, 150.0, "More Features", "Another Description", "another_picture.png", null, null),
-                new Date(), new Date(), 1));
+    private void fetchReservations() {
+        ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
+        Call<List<Reservation>> call = reservationService.getReservations();
 
-        // Pass context and reservationList to the adapter
-        reservationAdapter = new ReservationAdapter(this, reservationList); // Pass 'this' as context
-        rvReservationList.setAdapter(reservationAdapter);*/
+        call.enqueue(new Callback<List<Reservation>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Reservation>> call, @NonNull Response<List<Reservation>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    reservationList.clear();
+                    reservationList.addAll(response.body());
+                    reservationAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(ReservationList.this, "Failed to fetch reservations", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
+                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

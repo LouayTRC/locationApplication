@@ -2,24 +2,20 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200ee</color>
-    <color name="purple_700">#FF3700b3</color>
+    <color name="turquoise_200">#40E0D0</color>
+    <color name="turquoise_500">#30D5C8</color>
+    <color name="turquoise_700">#20B2AA</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="lavender">#8692f7</color>
+    <color name="turquoise_light">#48D1CC</color> <!-- Replacing lavender -->
     <color name="green">#4CAF50</color> <!-- A solid green for acceptance -->
     <color name="light_green">#81C784</color> <!-- A lighter green for button background -->
-    <color name="red">#F44336</color> <!-- A solid red for rejection -->
+    <color name="red">#F44336</color>
     <color name="primaryButton">#A4D76C</color>
     <color name="cancelRed">#FF6666</color>
     <color name="checkGreen">#66FF66</color>
     <color name="backgroundLight">#F2F2F2</color>
     <color name="textBlack">#000000</color>
     <color name="textGray">#888888</color>
-
-
-
-
 
 </resources>

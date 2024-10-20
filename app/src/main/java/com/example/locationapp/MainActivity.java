@@ -13,9 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Optional: Ensure button visibility
-        Button reservationsButton = findViewById(R.id.ButtonReservations);
-        reservationsButton.setVisibility(View.VISIBLE);
+
     }
 
     public void goToCarList(View view) {
@@ -28,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToReservations(View view) {
-        Intent intent = new Intent(MainActivity.this, ReservationList.class);
+    public void goToReservationList(View view) {
+        Intent intent = new Intent(this, ReservationList.class);
         startActivity(intent);
     }
+
+
 }

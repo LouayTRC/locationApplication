@@ -1,5 +1,7 @@
 package models;
 
+import android.app.Notification;
+
 import java.util.Date;
 
 public class Reservation {
@@ -19,7 +21,17 @@ public class Reservation {
         this.dateEnd = dateEnd;
         this.status = 0;
     }
+    public Client getClient() {
+        return client;
+    }
 
+    public Car getCar() {
+        return car;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
     @Override
     public String toString() {
         return "Reservation{" +
@@ -31,4 +43,6 @@ public class Reservation {
                 ", status=" + status +
                 '}';
     }
+
+
 }

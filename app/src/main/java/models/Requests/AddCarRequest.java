@@ -1,24 +1,36 @@
 package models.Requests;
 
 public class AddCarRequest {
-    public String _id;
     public String model;
     public Integer year;
     public double price;
-    public String features;
     public String description;
+    public String features;
     public String picture;
     public String marque;
     public String category;
 
-    public AddCarRequest(String model, Integer year, double price, String features, String description, String marque, String category, String picture){
-        this.model=model;
-        this.year=year;
-        this.price=price;
+    public AddCarRequest(String model, Integer year, double price, String description,String features, String marque, String category,String pic) {
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        this.description = description;
         this.features=features;
-        this.description=description;
-        this.marque=marque;
-        this.category=category;
-        this.picture=picture;
+        this.marque = marque;
+        this.category = category;
+        picture=pic;
+    }
+
+    @Override
+    public String toString() {
+        return "AddCarRequest{" +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", picture='" + picture + '\'' +
+                ", marque='" + marque + '\'' +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

@@ -10,7 +10,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg"
+        android:background="@color/black"
         tools:context=".FirstReservation">
 
         <!-- Title -->
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="Car Reservation"
             android:textSize="24sp"
-            android:textColor="#333"
+            android:textColor="@color/turquoise_light"
             android:layout_marginTop="16dp"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="Start Date:"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/turquoise_light"
                 android:layout_gravity="center_vertical" />
 
             <TextView
@@ -87,6 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:padding="8dp"/>
         </LinearLayout>
 
@@ -105,8 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="End Date:"
+                android:textColor="@color/turquoise_light"
                 android:textSize="18sp"
-                android:textColor="#333"
                 android:layout_gravity="center_vertical" />
 
             <TextView
@@ -114,6 +115,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:padding="8dp"/>
         </LinearLayout>
 
@@ -133,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:text="Need a Driver?"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/turquoise_light"
                 android:layout_gravity="center_vertical" />
 
             <RadioGroup
@@ -174,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:text="Delivery Option:"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/turquoise_light"
                 android:layout_gravity="center_vertical" />
 
             <RadioGroup
@@ -226,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:text="Longitude:"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/turquoise_light"
                 android:layout_gravity="center_vertical" />
 
             <TextView
@@ -234,7 +236,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/white"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
@@ -256,7 +258,7 @@
                 android:layout_height="wrap_content"
                 android:text="Latitude:"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/turquoise_light"
                 android:layout_gravity="center_vertical" />
 
             <TextView
@@ -264,7 +266,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="#333"
+                android:textColor="@color/white"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>

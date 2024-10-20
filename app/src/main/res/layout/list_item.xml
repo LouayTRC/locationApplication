@@ -6,7 +6,7 @@
     android:layout_marginEnd="12dp"
     android:layout_marginVertical="10dp"
     android:layout_marginHorizontal="10dp"
-    android:background="@drawable/bg"
+    android:backgroundTint="@color/turquoise_light"
     app:cardCornerRadius="20dp"
     app:cardElevation="8dp"
     android:layout_width="match_parent"
@@ -29,11 +29,13 @@
             android:layout_height="30dp"
             android:id="@+id/listName"
             android:text="Name"
-            android:textColor="@color/lavender"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:layout_marginTop="25dp"
             android:layout_marginStart="30dp"
-            android:layout_toEndOf="@id/listImage"/>
+            android:layout_toEndOf="@id/listImage"
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/listPrice"
@@ -44,8 +46,9 @@
             android:layout_marginEnd="20dp"
             android:layout_toEndOf="@id/listName"
             android:text="price"
-            android:textColor="@color/lavender"
-            android:textSize="16sp" />
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

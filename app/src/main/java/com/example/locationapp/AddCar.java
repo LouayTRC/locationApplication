@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -245,8 +246,8 @@ public class AddCar extends AppCompatActivity {
         String model = modelInput.getText().toString();
         int year = Integer.parseInt(yearInput.getText().toString());
         double price = Double.parseDouble(priceInput.getText().toString());
-        String features = featuresInput.getText().toString();
         String description = descriptionInput.getText().toString();
+        String features = featuresInput.getText().toString();
         int selectedMarqueIndex = marqueSpinner.getSelectedItemPosition();
         int selectedCategoryIndex = categorySpinner.getSelectedItemPosition();
 
@@ -265,8 +266,8 @@ public class AddCar extends AppCompatActivity {
         String imageBase64 = pictureService.compressImageToBase64(selectedBitmap); // Pass the bitmap to this method
 
         // Create the new car request
-        AddCarRequest newCar = new AddCarRequest(model, year, price, features, description, selectedMarque, selectedCategory, imageBase64);
-
+        AddCarRequest newCar = new AddCarRequest(model, year, price, description,features, selectedMarque, selectedCategory,imageBase64);
+        Log.d("Request : ",newCar.toString());
         // Send the new car data
         sendNewCar(newCar);
     }

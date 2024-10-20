@@ -33,7 +33,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
-        holder.tvCarName.setText(reservation.getCar().getModel());
+        holder.tvCarName.setText(reservation.car.model);
         holder.tvClientName.setText("Name"); // Assurez-vous d'accéder au nom du client correctement
 
         // Handle status icon display

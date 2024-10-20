@@ -5,8 +5,8 @@ public class Car {
     public String model;
     public Integer year;
     public double price;
-    public String features;
     public String description;
+    public String features;
     public String picture;
     public Marque marque;
     public Category category;
@@ -16,30 +16,10 @@ public class Car {
         this.model=model;
         this.year=year;
         this.price=price;
-        this.features=features;
         this.description=description;
+        this.features=features;
         this.picture=picture;
         this.marque=marque;
         this.category=category;
-        this.status=status;
     }
-    public String getId() {
-        return _id;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getBrand() {
-        return model;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
 }

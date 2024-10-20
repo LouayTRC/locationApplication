@@ -67,7 +67,7 @@ public class ReservationList extends AppCompatActivity {
 
     private void updateCarStatus(Car car) {
         // Use the existing reservationService instance
-        Call<Car> call = reservationService.updateCarStatus(car.getId(), car.getStatus());
+        Call<Car> call = reservationService.updateCarStatus(car._id, car.status);
         call.enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {

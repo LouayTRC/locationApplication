@@ -76,7 +76,7 @@ public class ReserveCar extends AppCompatActivity {
         Client client=new Client(user);
 
         // Create Reservation object
-        ReserveRequest reservation = new ReserveRequest("", "", location, driverYes,0,dateStart,dateEnd);
+        ReserveRequest reservation = new ReserveRequest("", user, location, driverYes,0,dateStart,dateEnd);
 
         ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
 

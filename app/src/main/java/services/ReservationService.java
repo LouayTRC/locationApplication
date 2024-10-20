@@ -18,7 +18,7 @@ public interface ReservationService {
     @POST("api/reservation") // Réserver une voiture
     Call<Reservation> reserver(@Body ReserveRequest request);
 
-    @GET("api/reservations") // Récupérer la liste des réservations
+    @GET("api/reservation") // Récupérer la liste des réservations
     Call<List<Reservation>> getReservations();
 
     @PUT("cars/{id}/status")

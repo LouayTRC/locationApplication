@@ -168,6 +168,7 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/driverLayout"
+            app:layout_constraintBottom_toTopOf="@id/locationlayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -201,54 +202,93 @@
             </RadioGroup>
         </LinearLayout>
 
-        <!-- Invisible MapView -->
-        <org.osmdroid.views.MapView
+
+        <LinearLayout
+            android:id="@+id/locationlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/reserveButton"
+            app:layout_constraintTop_toBottomOf="@id/deliveryLayout"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <!-- Invisible MapView -->
+            <org.osmdroid.views.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/deliveryLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Longitude Display -->
-        <LinearLayout
-            android:id="@+id/longitudeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/mapView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/buttonsLayout"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Longitude:"
-                android:textSize="18sp"
-                android:textColor="@color/turquoise_light"
-                android:layout_gravity="center_vertical" />
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/mapView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/longitudeDisplay"
-                android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/zoomInButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textSize="20dp"
+                    />
+
+                <!-- Zoom Out Button -->
+                <Button
+                    android:id="@+id/zoomOutButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            </LinearLayout>
+            <!-- Longitude Display -->
+
+            <LinearLayout
+                android:id="@+id/longitudeLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/white"
-                android:layout_marginStart="8dp"
-                android:layout_gravity="center_vertical" />
-        </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/mapView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Longitude:"
+                    android:textSize="18sp"
+                    android:textColor="@color/turquoise_light"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/longitudeDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
         <!-- Latitude Display -->
-        <LinearLayout
+            <LinearLayout
             android:id="@+id/latitudeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
-            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/longitudeLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -269,19 +309,21 @@
                 android:textColor="@color/white"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="center_vertical" />
+            <!-- Update Location Button -->
+
+        </LinearLayout>
+            <Button
+                android:id="@+id/btnCurrentLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Update Location"
+                app:layout_constraintTop_toBottomOf="@id/latitudeLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
         </LinearLayout>
 
-        <!-- Update Location Button -->
-        <Button
-            android:id="@+id/btnCurrentLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            android:text="Update Location"
-            app:layout_constraintTop_toBottomOf="@id/latitudeLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+
 
         <!-- Submit Button -->
         <Button
@@ -290,7 +332,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Submit Reservation"
-            app:layout_constraintTop_toBottomOf="@id/btnCurrentLocation"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

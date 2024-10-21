@@ -33,6 +33,8 @@ public class CarDetails extends AppCompatActivity {
     private PictureServiceImpl pictureService;
     private String startDateStr;
     private String endDateStr;
+    private Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class CarDetails extends AppCompatActivity {
 
         pictureService = new PictureServiceImpl();
 
-        Intent intent = getIntent();
+        intent = getIntent();
         if (intent != null) {
             String carId = intent.getStringExtra("_id");
             binding.detailModel.setText(intent.getStringExtra("model"));
@@ -113,10 +115,14 @@ public class CarDetails extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Boolean isAvailable = response.body();
                         if (isAvailable) {
-                            Intent intent = new Intent(CarDetails.this, FirstReservation.class);
-                            intent.putExtra("startDate", startDateStr);  // Pass start date as extra
-                            intent.putExtra("endDate", endDateStr);      // Pass end date as extra
-                            startActivity(intent);
+                            Intent newIntent = new Intent(CarDetails.this, FirstReservation.class);
+                            newIntent.putExtra("startDate", startDateStr);  // Pass start date as extra
+                            newIntent.putExtra("endDate", endDateStr);
+                            newIntent.putExtra("carId",carId);
+                            newIntent.putExtra("model",intent.getStringExtra("model"));
+                            newIntent.putExtra("picture",intent.getStringExtra("picture"));
+                            // Pass end date as extra
+                            startActivity(newIntent);
                         } else {
                             String message = "Car is not available";
                             Toast.makeText(CarDetails.this, message, Toast.LENGTH_SHORT).show();

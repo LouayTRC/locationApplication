@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Config.RetrofitClient;
-import models.Car;
 import models.Reservation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +45,7 @@ public class ReservationList extends AppCompatActivity {
     }
 
     public void goToReservaionDetails(View view) {
-        Intent intent = new Intent(this, reservationDetails.class);
+        Intent intent = new Intent(this, ReservationDetails.class);
         startActivity(intent);
     }
 

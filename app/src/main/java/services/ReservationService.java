@@ -18,9 +18,12 @@ public interface ReservationService {
     @POST("api/reservation") // Réserver une voiture
     Call<Reservation> reserver(@Body ReserveRequest request);
 
+    @GET("api/reservation/{id}") // Récupérer la liste des réservations
+    Call<Reservation> getReservationById(@Path("id") String reservationId);
+
     @GET("api/reservation") // Récupérer la liste des réservations
     Call<List<Reservation>> getReservations();
 
     @PUT("api/reservation/{id}/{status}")
-    Call<Car> updateCarStatus(@Path("id") String carId, @Path("status") Integer status);
+    Call<Reservation> updateReservationStatus(@Path("id") String reservationId, @Path("status") Integer status);
 }

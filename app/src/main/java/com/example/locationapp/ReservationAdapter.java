@@ -1,6 +1,7 @@
 package com.example.locationapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,6 +78,14 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         holder.ivCancel.setOnClickListener(v -> {
             updateReservationStatus(reservation._id, -1);
         });
+
+        holder.btnDetails.setOnClickListener(v -> {
+            // Navigate to the ReservationDetails activity and pass the reservationId as an extra
+            Intent intent = new Intent(context, ReservationDetails.class);
+            Log.d("id",reservation._id);
+            intent.putExtra("reservationId", reservation._id);
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -105,10 +114,10 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     private void updateReservationStatus(String reservationId, Integer status) {
         // Use the existing reservationService instance
         ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
-        Call<Car> call = reservationService.updateCarStatus(reservationId, status);
-        call.enqueue(new Callback<Car>() {
+        Call<Reservation> call = reservationService.updateReservationStatus(reservationId, status);
+        call.enqueue(new Callback<Reservation>() {
             @Override
-            public void onResponse(@NonNull Call<Car> call, @NonNull Response<Car> response) {
+            public void onResponse(@NonNull Call<Reservation> call, @NonNull Response<Reservation> response) {
                 if (response.isSuccessful()) {
                     // Successfully updated the car's status
                     Toast.makeText(context, "Reservation status updated successfully!", Toast.LENGTH_SHORT).show();
@@ -119,10 +128,12 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             }
 
             @Override
-            public void onFailure(@NonNull Call<Car> call, @NonNull Throwable t) {
-                // Handle request failure
+            public void onFailure(Call<Reservation> call, Throwable t) {
                 Toast.makeText(context, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show();
             }
+
         });
     }
+
+
 }

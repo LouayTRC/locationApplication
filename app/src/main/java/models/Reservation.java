@@ -8,6 +8,7 @@ public class Reservation {
     public Car car; // Reference to the Car object
     public String locationLong; // Longitude of the reservation location
     public String locationLat; // Latitude of the reservation location
+    public Double distanceEnKm;
     public Date dateStart; // Start date of the reservation
     public Date dateEnd; // End date of the reservation
     public boolean driver; // Indicates if a driver is assigned

@@ -1,11 +1,14 @@
 package com.example.locationapp;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,6 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 import Config.RetrofitClient;
 import models.Reservation;
@@ -49,6 +55,9 @@ public class ReservationDetails extends AppCompatActivity {
         statusTextView = findViewById(R.id.statusTextView);
         totalPaymentTextView = findViewById(R.id.totalPaymentTextView);
 
+
+
+
         // Get the reservation ID from the Intent extras
         String reservationId = getIntent().getStringExtra("reservationId");
         Log.d("id2",reservationId);
@@ -80,6 +89,7 @@ public class ReservationDetails extends AppCompatActivity {
         });
     }
 
+
     private void updateUIWithReservationData(Reservation reservation) {
         String displayedstatus;
         if (reservation.status==0){
@@ -94,13 +104,38 @@ public class ReservationDetails extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedStartDate = dateFormat.format(reservation.dateStart);
         String formattedEndDate = dateFormat.format(reservation.dateEnd);
+        double prixSupplementaire = reservation.distanceEnKm * 10;
 
 
+
+        double prixDSupplementaire=reservation.dateDiff*50;
         reservedByTextView.setText(reservation.client.user.getName());
         carModelTextView.setText(reservation.car.model);
         reservationDatesTextView.setText(formattedStartDate + " - " + formattedEndDate);
         driverOptionTextView.setText(reservation.driver ? "Yes" : "No");
+
+
+
         livraisonOptionTextView.setText(reservation.locationLat != null && reservation.locationLong != null ? "Yes" : "No");
+        TextView livraisonPriceTextView = findViewById(R.id.livraisonPriceTextView);
+        TextView driverPriceTextView=findViewById(R.id.driverPriceTextView);
+
+        if (reservation.locationLat != null && reservation.locationLong != null ) {
+
+            livraisonPriceTextView.setVisibility(View.VISIBLE); // Afficher le prix
+            String prixFormate = String.format("%.2f TND", prixSupplementaire);
+            livraisonPriceTextView.setText(prixFormate);
+        } else {
+            livraisonPriceTextView.setVisibility(View.GONE); // Masquer si ce n'est pas "Yes"
+        }
+        if(reservation.driver){
+            driverPriceTextView.setVisibility(View.VISIBLE);
+            driverPriceTextView.setText(String.valueOf(prixDSupplementaire + " TND"));
+        }
+        else {driverPriceTextView.setVisibility(View.VISIBLE);}
+
+
+
         livraisonDistanceTextView.setText(reservation.distanceEnKm!=0 ? String.valueOf(reservation.distanceEnKm)+ " KM" : "No Delivery requested");
         statusTextView.setText(displayedstatus);
         totalPaymentTextView.setText(String.valueOf(reservation.total + " TND"));

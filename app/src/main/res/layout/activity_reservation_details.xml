@@ -137,12 +137,22 @@
 
         <TextView
             android:id="@+id/driverOptionTextView"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="[Yes/No]"
             android:textSize="16sp"
             android:textColor="#666666"/>
+        <TextView
+            android:id="@+id/driverPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ 80"
+            android:textSize="16sp"
+            android:textColor="#FF0000"
+            android:visibility="gone"
+             />
+
     </LinearLayout>
 
     <!-- Livraison Option Section -->
@@ -173,6 +183,14 @@
             android:text="[Yes/No]"
             android:textSize="16sp"
             android:textColor="#666666"/>
+        <TextView
+            android:id="@+id/livraisonPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ 80"
+            android:textSize="16sp"
+            android:textColor="#FF0000"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Livraison Distance Section -->
@@ -266,5 +284,6 @@
             android:textStyle="bold"
             android:textColor="#000000"/>
     </LinearLayout>
+
 
 </LinearLayout>

@@ -2,22 +2,21 @@ package models.Requests;
 
 import models.Location;
 import models.Reservation;
+import models.User;
 
 public class ReserveRequest {
     public String carId;
-    public String userId;
+    public User user;
     public Location location;
     public boolean driver;
-    public Integer status;
     public String dateStart;
     public String dateEnd;
 
-    public ReserveRequest(String car,String user,Location loc,boolean dri,Integer stat,String start,String end){
+    public ReserveRequest(String car,User user,Location loc,boolean dri,String start,String end){
         carId=car;
-        userId=user;
+        this.user=user;
         location=loc;
         driver=dri;
-        status=stat;
         dateStart=start;
         dateEnd=end;
     }

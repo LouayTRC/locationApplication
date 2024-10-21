@@ -62,6 +62,7 @@ public class ReserveCar extends AppCompatActivity {
         boolean driverYes = intent.getBooleanExtra("driverYes", false);
         Double deliveryLongitude = intent.getDoubleExtra("deliveryLongitude", Double.NaN);
         Double deliveryLatitude = intent.getDoubleExtra("deliveryLatitude", Double.NaN);
+        String carId=intent.getStringExtra("carId");
 
         // Create Location object
         Location location;
@@ -73,10 +74,10 @@ public class ReserveCar extends AppCompatActivity {
 
         // Create Client object
         User user = new User(cin, name, email, phone);
-        Client client=new Client(user);
+
 
         // Create Reservation object
-        ReserveRequest reservation = new ReserveRequest("", "", location, driverYes,0,dateStart,dateEnd);
+        ReserveRequest reservation = new ReserveRequest(carId, user, location, driverYes,dateStart,dateEnd);
 
         ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
 
@@ -90,6 +91,7 @@ public class ReserveCar extends AppCompatActivity {
                     // Log the successful reservation
                     Log.d("ReservationLog", res.toString());
                     Toast.makeText(ReserveCar.this, "Reservation added successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     // Log the error response
                     Log.e("ReservationLog", "Error: " + response.code() + " - " + response.message());
@@ -105,7 +107,6 @@ public class ReserveCar extends AppCompatActivity {
             }
         });
 
-        // Handle the reservation (e.g., save it, send it to another activity, etc.)
-        Toast.makeText(this, "Reservation created successfully!", Toast.LENGTH_SHORT).show();
+
     }
 }

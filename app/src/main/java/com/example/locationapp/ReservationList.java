@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Config.RetrofitClient;
+import models.Car;
 import models.Reservation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +26,7 @@ public class ReservationList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ReservationAdapter reservationAdapter;
     private List<Reservation> reservationList;
+    private ReservationService reservationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class ReservationList extends AppCompatActivity {
     }
 
     private void fetchReservations() {
-        ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
+        reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
         Call<List<Reservation>> call = reservationService.getReservations();
 
         call.enqueue(new Callback<List<Reservation>>() {
@@ -56,16 +59,41 @@ public class ReservationList extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Reservation>> call, @NonNull Response<List<Reservation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     reservationList.clear();
+
                     reservationList.addAll(response.body());
                     reservationAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(ReservationList.this, "Failed to fetch reservations", Toast.LENGTH_SHORT).show();
+                    // Log response code and message for debugging
+                    Toast.makeText(ReservationList.this, "Failed to fetch reservations: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
-                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateCarStatus(Car car) {
+        // Use the existing reservationService instance
+        Call<Car> call = reservationService.updateCarStatus(car._id, car.status);
+        call.enqueue(new Callback<Car>() {
+            @Override
+            public void onResponse(Call<Car> call, Response<Car> response) {
+                if (response.isSuccessful()) {
+                    // Successfully updated the car's status
+                    Toast.makeText(ReservationList.this, "Car status updated successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Handle error response
+                    Toast.makeText(ReservationList.this, "Failed to update car status. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Car> call, Throwable t) {
+                // Handle request failure
+                Toast.makeText(ReservationList.this, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }

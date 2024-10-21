@@ -1,11 +1,17 @@
 package com.example.locationapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,6 +27,10 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.util.GeoPoint;
 
+import Config.RetrofitClient;
+import services.PictureService;
+import services.PictureServiceImpl;
+
 public class FirstReservation extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -28,8 +38,16 @@ public class FirstReservation extends AppCompatActivity {
     private MapView mapView;
     private MyLocationNewOverlay myLocationOverlay;
     private Marker currentLocationMarker; // Marker for current location
-    private boolean deliveryYes; // Flag to check delivery option
+    private boolean deliveryYes;
+    private boolean driverYes;// Flag to check delivery option
+    private LinearLayout locationView;
 
+    private TextView carModel;
+    private ImageView image;
+    private GeoPoint startingLocation;
+
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +59,16 @@ public class FirstReservation extends AppCompatActivity {
         endDateDisplay = findViewById(R.id.endDateInput);
         latitudeDisplay = findViewById(R.id.latitudeDisplay);
         longitudeDisplay = findViewById(R.id.longitudeDisplay);
+        locationView=findViewById(R.id.locationlayout);
+        locationView.setVisibility(View.GONE);
         mapView = findViewById(R.id.mapView);
+
+
+        getAndDisplayCar();
+
+        // Initialize Zoom Buttons
+        Button zoomInButton = findViewById(R.id.zoomInButton);
+        Button zoomOutButton = findViewById(R.id.zoomOutButton);
 
         // Set date from extras
         setDateFromExtras();
@@ -60,24 +87,72 @@ public class FirstReservation extends AppCompatActivity {
         // Handle delivery options
         RadioGroup deliveryGroup = findViewById(R.id.deliveryGroup);
         deliveryGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.deliveryYes) {
-                deliveryYes = true; // Set delivery flag
+            deliveryYes = checkedId == R.id.deliveryYes; // Set delivery flag
+            if (deliveryYes) {
                 showMap();
             } else {
-                deliveryYes = false; // Clear delivery flag
                 hideMap();
             }
         });
 
-        // Reserve Button action
-        Button reserveButton = findViewById(R.id.reserveButton);
-        reserveButton.setOnClickListener(v -> goToReserveCar());
+        RadioGroup driverGroup = findViewById(R.id.driverGroup);
+        driverGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            driverYes = checkedId == R.id.driverYes; // Set driver flag
+        });
 
-        // Button to center map on current location
-        Button btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
-        btnCurrentLocation.setOnClickListener(v -> centerMapOnCurrentLocation());
+        // Set touch listener on the map to change location
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    GeoPoint newLocation = (GeoPoint) mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
+                    updateLocation(newLocation);
+                }
+                return true; // Return true to indicate the touch event was handled
+            }
+        });
+
+        Button updateLocationButton = findViewById(R.id.btnCurrentLocation);
+        updateLocationButton.setOnClickListener(v -> {
+            if (startingLocation != null) {
+                updateLocation(startingLocation);
+                Toast.makeText(this, "Returning to the starting location", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Starting location not set", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Zoom in and out button listeners
+        zoomInButton.setOnClickListener(v -> zoomIn());
+        zoomOutButton.setOnClickListener(v -> zoomOut());
+
+        Button submitButton = findViewById(R.id.reserveButton);
+        submitButton.setOnClickListener(v -> {
+            goToReserveCar();
+        });
     }
+    private void getAndDisplayCar(){
+        carModel=findViewById(R.id.carName);
+        Intent intent=getIntent();
+        carModel.setText(intent.getStringExtra("model"));
 
+        image=findViewById(R.id.carImage);
+        String encodedImage = intent.getStringExtra("picture");
+        if (encodedImage != null) {
+            setImageFromEncodedString(encodedImage);
+        } else {
+            image.setImageResource(R.drawable.car1); // Default image
+        }
+
+    }
+    private void setImageFromEncodedString(String encodedImage) {
+        try {
+            PictureService pictureService= new PictureServiceImpl();
+            Bitmap decodedBitmap = pictureService.decompressBase64ToImage(encodedImage);
+            image.setImageBitmap(decodedBitmap);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Error decoding image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
     private void setDateFromExtras() {
         Intent intent = getIntent();
         String startDate = intent.getStringExtra("startDate");
@@ -88,25 +163,26 @@ public class FirstReservation extends AppCompatActivity {
     }
 
     private void showMap() {
-        findViewById(R.id.mapView).setVisibility(LinearLayout.VISIBLE);
-        findViewById(R.id.longitudeLayout).setVisibility(LinearLayout.VISIBLE);
-        findViewById(R.id.latitudeLayout).setVisibility(LinearLayout.VISIBLE);
-        findViewById(R.id.btnCurrentLocation).setVisibility(LinearLayout.VISIBLE);
+        locationView.setVisibility(LinearLayout.VISIBLE);
+
         if (myLocationOverlay.getMyLocation() != null) {
             updateLocationDisplays(myLocationOverlay.getMyLocation());
             GeoPoint geoPoint = new GeoPoint(myLocationOverlay.getMyLocation());
+            if (startingLocation == null) {
+                startingLocation = geoPoint;
+            }
             mapView.getController().setZoom(15.0);
             mapView.getController().setCenter(geoPoint);
         }
     }
 
     private void hideMap() {
-        findViewById(R.id.mapView).setVisibility(LinearLayout.GONE);
+        locationView.setVisibility(LinearLayout.GONE);
     }
 
     private void updateLocationDisplays(GeoPoint location) {
-        latitudeDisplay.setText("Latitude: " + location.getLatitude());
-        longitudeDisplay.setText("Longitude: " + location.getLongitude());
+        latitudeDisplay.setText(String .valueOf(location.getLatitude()));
+        longitudeDisplay.setText(String .valueOf(location.getLongitude()));
 
         if (currentLocationMarker == null) {
             // Initialize and add a marker for the current location
@@ -120,66 +196,26 @@ public class FirstReservation extends AppCompatActivity {
         currentLocationMarker.setPosition(location);
         mapView.getController().setCenter(location);
         mapView.invalidate();
-
-        // Listen for drag events
-        currentLocationMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                // Handle marker drag start if needed
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                // Handle marker drag if needed
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                // Update the UI with the new position
-                GeoPoint newPosition = marker.getPosition();
-                latitudeDisplay.setText("Latitude: " + newPosition.getLatitude());
-                longitudeDisplay.setText("Longitude: " + newPosition.getLongitude());
-            }
-        });
     }
 
-    private void centerMapOnCurrentLocation() {
-        if (myLocationOverlay.getMyLocation() != null) {
-            GeoPoint location = myLocationOverlay.getMyLocation();
-            GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-            mapView.getController().animateTo(geoPoint);
-            updateLocationDisplays(location);
-        } else {
-            Toast.makeText(this, "Current location not available", Toast.LENGTH_SHORT).show();
+    private void updateLocation(GeoPoint newLocation) {
+        if (currentLocationMarker != null) {
+            currentLocationMarker.setPosition(newLocation);
+            updateLocationDisplays(newLocation);
+            mapView.invalidate();
         }
     }
 
-    private void goToReserveCar() {
-        String startDate = startDateDisplay.getText().toString();
-        String endDate = endDateDisplay.getText().toString();
-        boolean driverYes = true; // Assume driver is required or retrieved from your logic
-        Double deliveryLongitude = null;
-        Double deliveryLatitude = null;
+    // Method to zoom in
+    private void zoomIn() {
+        double currentZoom = mapView.getZoomLevelDouble();
+        mapView.getController().setZoom(currentZoom + 1);
+    }
 
-        // Check if delivery is enabled to pass location or null values
-        if (deliveryYes) {
-            GeoPoint myLocation = myLocationOverlay.getMyLocation();
-            if (myLocation != null) {
-                deliveryLongitude = myLocation.getLongitude();
-                deliveryLatitude = myLocation.getLatitude();
-            }
-        }
-
-        Intent intent = new Intent(this, ReserveCar.class);
-        // Put the extras in the intent
-        intent.putExtra("startDate", startDate);
-        intent.putExtra("endDate", endDate);
-        intent.putExtra("driverYes", driverYes); // Pass the driver boolean value
-        // Pass the longitude and latitude values
-        intent.putExtra("deliveryLongitude", deliveryLongitude);
-        intent.putExtra("deliveryLatitude", deliveryLatitude);
-
-        startActivity(intent);
+    // Method to zoom out
+    private void zoomOut() {
+        double currentZoom = mapView.getZoomLevelDouble();
+        mapView.getController().setZoom(currentZoom - 1);
     }
 
     @Override
@@ -212,5 +248,33 @@ public class FirstReservation extends AppCompatActivity {
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void goToReserveCar() {
+        String startDate = startDateDisplay.getText().toString();
+        String endDate = endDateDisplay.getText().toString(); // Assume driver is required or retrieved from your logic
+        Double deliveryLongitude = null;
+        Double deliveryLatitude = null;
+
+        // Check if delivery is enabled to pass location or null values
+        if (this.deliveryYes) {
+            GeoPoint myLocation = myLocationOverlay.getMyLocation();
+            if (myLocation != null) {
+                deliveryLongitude = myLocation.getLongitude();
+                deliveryLatitude = myLocation.getLatitude();
+            }
+        }
+        Intent oldIntent=getIntent();
+
+        Intent intent = new Intent(this, ReserveCar.class);
+        // Put the extras in the intent
+        intent.putExtra("startDate", startDate);
+        intent.putExtra("endDate", endDate);
+        intent.putExtra("driverYes", driverYes); // Pass the driver boolean value
+        // Pass the longitude and latitude values
+        intent.putExtra("deliveryLongitude", deliveryLongitude);
+        intent.putExtra("deliveryLatitude", deliveryLatitude);
+        intent.putExtra("carId",oldIntent.getStringExtra("carId"));
+        startActivity(intent);
     }
 }

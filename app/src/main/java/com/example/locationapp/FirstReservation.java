@@ -45,6 +45,7 @@ public class FirstReservation extends AppCompatActivity {
     private TextView carModel;
     private ImageView image;
     private GeoPoint startingLocation;
+    private GeoPoint latestSelectedLocation;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -170,6 +171,7 @@ public class FirstReservation extends AppCompatActivity {
             GeoPoint geoPoint = new GeoPoint(myLocationOverlay.getMyLocation());
             if (startingLocation == null) {
                 startingLocation = geoPoint;
+                latestSelectedLocation=geoPoint;
             }
             mapView.getController().setZoom(15.0);
             mapView.getController().setCenter(geoPoint);
@@ -203,6 +205,7 @@ public class FirstReservation extends AppCompatActivity {
             currentLocationMarker.setPosition(newLocation);
             updateLocationDisplays(newLocation);
             mapView.invalidate();
+            latestSelectedLocation = newLocation;
         }
     }
 
@@ -258,11 +261,8 @@ public class FirstReservation extends AppCompatActivity {
 
         // Check if delivery is enabled to pass location or null values
         if (this.deliveryYes) {
-            GeoPoint myLocation = myLocationOverlay.getMyLocation();
-            if (myLocation != null) {
-                deliveryLongitude = myLocation.getLongitude();
-                deliveryLatitude = myLocation.getLatitude();
-            }
+            deliveryLongitude = latestSelectedLocation.getLongitude();
+            deliveryLatitude = latestSelectedLocation.getLatitude();
         }
         Intent oldIntent=getIntent();
 

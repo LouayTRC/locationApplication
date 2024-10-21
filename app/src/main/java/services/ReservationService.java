@@ -21,6 +21,6 @@ public interface ReservationService {
     @GET("api/reservation") // Récupérer la liste des réservations
     Call<List<Reservation>> getReservations();
 
-    @PUT("cars/{id}/status")
-    Call<Car> updateCarStatus(@Path("id") String carId, @Body int status);
+    @PUT("api/reservation/{id}/{status}")
+    Call<Car> updateCarStatus(@Path("id") String carId, @Path("status") Integer status);
 }

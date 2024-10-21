@@ -19,25 +19,27 @@
         android:src="@drawable/car1" />
 
     <TextView
-        android:id="@+id/tvCarName"
+        android:id="@+id/tvClientName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Car Name"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/ivCarImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivStatusIcons"
         app:layout_constraintHorizontal_bias="0.0"/>
 
     <TextView
-        android:id="@+id/tvClientName"
+        android:id="@+id/tvCarName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Client Name"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/tvCarName"
-        app:layout_constraintTop_toBottomOf="@id/tvCarName"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="@id/tvClientName"
+        app:layout_constraintTop_toBottomOf="@id/tvClientName"
         app:layout_constraintEnd_toStartOf="@id/ivStatusIcons"/>
 
     <LinearLayout

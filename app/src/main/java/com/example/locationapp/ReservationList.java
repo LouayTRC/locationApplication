@@ -36,7 +36,7 @@ public class ReservationList extends AppCompatActivity {
 
         // Configure RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reservationAdapter = new ReservationAdapter(reservationList);
+        reservationAdapter = new ReservationAdapter(this, reservationList); // Pass the context to the adapter
         recyclerView.setAdapter(reservationAdapter);
 
         // Fetch reservations from the API
@@ -52,7 +52,6 @@ public class ReservationList extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Reservation>> call, @NonNull Response<List<Reservation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     reservationList.clear();
-
                     reservationList.addAll(response.body());
                     reservationAdapter.notifyDataSetChanged();
                 } else {
@@ -64,29 +63,6 @@ public class ReservationList extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
                 Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void updateCarStatus(Car car) {
-        // Use the existing reservationService instance
-        Call<Car> call = reservationService.updateCarStatus(car._id, car.status);
-        call.enqueue(new Callback<Car>() {
-            @Override
-            public void onResponse(Call<Car> call, Response<Car> response) {
-                if (response.isSuccessful()) {
-                    // Successfully updated the car's status
-                    Toast.makeText(ReservationList.this, "Car status updated successfully!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle error response
-                    Toast.makeText(ReservationList.this, "Failed to update car status. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Car> call, Throwable t) {
-                // Handle request failure
-                Toast.makeText(ReservationList.this, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }

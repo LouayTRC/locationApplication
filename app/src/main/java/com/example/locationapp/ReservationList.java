@@ -1,6 +1,8 @@
 package com.example.locationapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,6 +43,11 @@ public class ReservationList extends AppCompatActivity {
 
         // Fetch reservations from the API
         fetchReservations();
+    }
+
+    public void goToReservaionDetails(View view) {
+        Intent intent = new Intent(this, reservationDetails.class);
+        startActivity(intent);
     }
 
     private void fetchReservations() {

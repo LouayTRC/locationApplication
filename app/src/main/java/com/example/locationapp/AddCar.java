@@ -89,6 +89,7 @@ public class AddCar extends AppCompatActivity {
                 selectedBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri); // Store selected bitmap
                 ImageView imageView = findViewById(R.id.image_preview);
                 imageView.setImageBitmap(selectedBitmap);
+                imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }

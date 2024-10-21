@@ -2,6 +2,7 @@ package com.example.locationapp;
 
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,16 +52,18 @@ public class ReservationList extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Reservation>> call, @NonNull Response<List<Reservation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     reservationList.clear();
+
                     reservationList.addAll(response.body());
                     reservationAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(ReservationList.this, "Failed to fetch reservations", Toast.LENGTH_SHORT).show();
+                    // Log response code and message for debugging
+                    Toast.makeText(ReservationList.this, "Failed to fetch reservations: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
-                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

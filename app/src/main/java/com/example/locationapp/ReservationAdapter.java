@@ -1,11 +1,13 @@
 package com.example.locationapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,23 +35,22 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
-        holder.tvCarName.setText(reservation.car.model);
-        holder.tvClientName.setText("Name"); // Assurez-vous d'accéder au nom du client correctement
-
-        // Handle status icon display
-        if (reservation.getStatus() == 0) {
-            holder.ivCheck.setVisibility(View.VISIBLE);
-            holder.ivCancel.setVisibility(View.GONE);
+        Log.d("reserb" , reservation.toString());
+        // Log to check if Car and model are not null
+        if (reservation.car != null) {
+            Log.d("Car Info", "Model: " + reservation.car.model);
+            holder.tvCarName.setText(reservation.car.model);
         } else {
-            holder.ivCheck.setVisibility(View.GONE);
-            holder.ivCancel.setVisibility(View.VISIBLE);
+            holder.tvCarName.setText("Car information unavailable");
         }
 
-        // Handle "Details" button click
-        holder.btnDetails.setOnClickListener(view -> {
-            // Open reservation details
-        });
+        if (reservation.client != null && reservation.client.user != null) {
+            holder.tvClientName.setText(reservation.client.user.getName());
+        } else {
+            holder.tvClientName.setText("Client information unavailable");
+        }
     }
+
 
     @Override
     public int getItemCount() {

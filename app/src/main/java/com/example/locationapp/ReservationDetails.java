@@ -108,7 +108,7 @@ public class ReservationDetails extends AppCompatActivity {
 
 
 
-        double prixDSupplementaire=reservation.dateDiff*50;
+        double prixDSupplementaire=reservation.diffDays*50;
         reservedByTextView.setText(reservation.client.user.getName());
         carModelTextView.setText(reservation.car.model);
         reservationDatesTextView.setText(formattedStartDate + " - " + formattedEndDate);

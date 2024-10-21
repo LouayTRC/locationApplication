@@ -80,7 +80,7 @@ public class ReserveCar extends AppCompatActivity {
         ReserveRequest reservation = new ReserveRequest(carId, user, location, driverYes,dateStart,dateEnd);
 
         ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
-
+        Log.d("request:",reservation.toString());
 
         Call<Reservation> reservationCall = reservationService.reserver(reservation);
         reservationCall.enqueue(new Callback<Reservation>() {

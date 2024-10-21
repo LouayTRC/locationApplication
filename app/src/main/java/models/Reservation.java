@@ -14,7 +14,7 @@ public class Reservation {
     public boolean driver; // Indicates if a driver is assigned
     public Integer status; // Status of the reservation
     public Double total;
-    public Integer dateDiff;// Total cost of the reservation
+    public Integer diffDays;// Total cost of the reservation
 
     // Constructor
     public Reservation(Client client, Car car, String locationLong, String locationLat, Date dateStart, Date dateEnd, boolean driver, Double total,Integer dateDiff) {
@@ -43,7 +43,7 @@ public class Reservation {
                 ", driver=" + driver +
                 ", status=" + status +
                 ", total=" + total +
-                ",dateDiff"+ dateDiff+
+                ",dateDiff"+ diffDays+
                 '}';
     }
 }

@@ -30,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ReservationList.class);
         startActivity(intent);
     }
+    public void goToReservationDriverList(View view) {
+        Intent intent = new Intent(this, ReservationDriverList.class);
+        startActivity(intent);
+    }
 
 
 }

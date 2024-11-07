@@ -20,31 +20,31 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import services.ReservationService;
 
-public class ReservationList extends AppCompatActivity {
+public class ReservationDriverList extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ReservationAdapter reservationAdapter;
+    private ReservationDriverAdapter reservationDriverAdapter;
     private List<Reservation> reservationList;
     private ReservationService reservationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_reservations_activity);
+        setContentView(R.layout.activity_reservation_driver_list);
 
-        recyclerView = findViewById(R.id.rvReservationList);
+        recyclerView = findViewById(R.id.rvReservationListD);
         reservationList = new ArrayList<>();
 
         // Configure RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reservationAdapter = new ReservationAdapter(this, reservationList); // Pass the context to the adapter
-        recyclerView.setAdapter(reservationAdapter);
+        reservationDriverAdapter = new ReservationDriverAdapter(this, reservationList);
+        recyclerView.setAdapter(reservationDriverAdapter);
 
-        // Fetch reservations from the API
+        // Fetch reservations with driver
         fetchReservations();
     }
 
-    public void goToReservaionDetails(View view) {
+    public void goToReservationDetails(View view) {
         Intent intent = new Intent(this, ReservationDetails.class);
         startActivity(intent);
     }
@@ -57,19 +57,21 @@ public class ReservationList extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<List<Reservation>> call, @NonNull Response<List<Reservation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     reservationList.clear();
-                    reservationList.addAll(response.body());
-                    reservationAdapter.notifyDataSetChanged();
+                    for (Reservation reservation : response.body()) {
+                        if (reservation.driver()) {
+                            reservationList.add(reservation);
+                        }
+                    }
+                    reservationDriverAdapter.notifyDataSetChanged();
                 } else {
-                    // Log response code and message for debugging
-                    Toast.makeText(ReservationList.this, "Failed to fetch reservations: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ReservationDriverList.this, "Failed to fetch reservations: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
-                Toast.makeText(ReservationList.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(ReservationDriverList.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

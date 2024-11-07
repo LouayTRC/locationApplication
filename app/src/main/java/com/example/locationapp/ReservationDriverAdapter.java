@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import Config.RetrofitClient;
-import models.Car;
 import models.Reservation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,22 +26,21 @@ import services.PictureService;
 import services.PictureServiceImpl;
 import services.ReservationService;
 
-public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
+public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDriverAdapter.ReservationViewHolder> {
 
     private Context context;
     private List<Reservation> reservationList;
 
-    // Updated constructor to accept a Context parameter
-    public ReservationAdapter(Context context, List<Reservation> reservationList) {
+    public ReservationDriverAdapter(Context context, List<Reservation> reservations) {
         this.context = context;
-        this.reservationList = reservationList;
+        this.reservationList = reservations;
     }
 
     @NonNull
     @Override
     public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_reservation, parent, false);
+                .inflate(R.layout.activity_rersevation_driver_adapter, parent, false);
         return new ReservationViewHolder(itemView);
     }
 
@@ -52,8 +50,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         Log.d("Reservation", reservation.toString());
 
         // Display car information
-        if (reservation.car != null ) {
-            Log.d("Car Info", "Model: " + reservation.car.model);
+        if (reservation.car != null) {
             holder.tvCarName.setText(reservation.car.model);
 
             PictureService pictureService = new PictureServiceImpl();
@@ -70,19 +67,10 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             holder.tvClientName.setText("Client information unavailable");
         }
 
-        // Set click listeners for btnCheck and btnCancel
-        holder.ivCheck.setOnClickListener(v -> {
-            updateReservationStatus(reservation._id, 1); // Update car status to 1
-        });
-
-        holder.ivCancel.setOnClickListener(v -> {
-            updateReservationStatus(reservation._id, -1);
-        });
+        // Set click listeners for buttons
 
         holder.btnDetails.setOnClickListener(v -> {
-            // Navigate to the ReservationDetails activity and pass the reservationId as an extra
             Intent intent = new Intent(context, ReservationDetails.class);
-            Log.d("id",reservation._id);
             intent.putExtra("reservationId", reservation._id);
             context.startActivity(intent);
         });
@@ -96,44 +84,19 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvCarName, tvClientName;
-        ImageView ivCheck, ivCancel;
+        ImageView ivCheck, ivMsg;
         Button btnDetails;
         ImageView ivCarImage;
 
         public ReservationViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvCarName = itemView.findViewById(R.id.tvCarName);
-            tvClientName = itemView.findViewById(R.id.tvClientName);
-            ivCheck = itemView.findViewById(R.id.ivCheck);
-            ivCancel = itemView.findViewById(R.id.ivCancel);
-            btnDetails = itemView.findViewById(R.id.btnDetails);
-            ivCarImage = itemView.findViewById(R.id.ivCarImage);
+            tvCarName = itemView.findViewById(R.id.tvCarNameD);
+            tvClientName = itemView.findViewById(R.id.tvClientNameD);
+            ivCheck = itemView.findViewById(R.id.ivCheckD);
+            ivMsg = itemView.findViewById(R.id.ivMsgD);
+            btnDetails = itemView.findViewById(R.id.btnDetailsD);
+            ivCarImage = itemView.findViewById(R.id.ivCarImageD);
         }
     }
-
-    private void updateReservationStatus(String reservationId, Integer status) {
-        // Use the existing reservationService instance
-        ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
-        Call<Reservation> call = reservationService.updateReservationStatus(reservationId, status);
-        call.enqueue(new Callback<Reservation>() {
-            @Override
-            public void onResponse(@NonNull Call<Reservation> call, @NonNull Response<Reservation> response) {
-                if (response.isSuccessful()) {
-                    // Successfully updated the car's status
-                    Toast.makeText(context, "Reservation status updated successfully!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle error response
-                    Toast.makeText(context, "Failed to update car status. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Reservation> call, Throwable t) {
-                Toast.makeText(context, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-    }
-
 
 }

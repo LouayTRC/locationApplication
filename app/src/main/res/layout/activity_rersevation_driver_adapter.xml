@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@drawable/item_background"
+    android:padding="8dp">
+
+  <ImageView
+      android:id="@+id/ivCarImageD"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
+      android:layout_marginEnd="8dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:src="@drawable/car1" />
+
+  <TextView
+      android:id="@+id/tvClientNameD"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="Car Name"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      android:layout_marginStart="8dp"
+      app:layout_constraintStart_toEndOf="@id/ivCarImageD"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/ivStatusIconsD"
+      app:layout_constraintHorizontal_bias="0.0"/>
+
+  <TextView
+      android:id="@+id/tvCarNameD"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="Client Name"
+      android:textSize="14sp"
+      android:layout_marginStart="8dp"
+      app:layout_constraintStart_toStartOf="@id/tvClientNameD"
+      app:layout_constraintTop_toBottomOf="@id/tvClientNameD"
+      app:layout_constraintEnd_toStartOf="@id/ivStatusIconsD"/>
+
+  <LinearLayout
+      android:id="@+id/ivStatusIconsD"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintEnd_toStartOf="@+id/btnDetailsD"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent">
+
+    <ImageView
+        android:id="@+id/ivCheckD"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_check_green"
+        android:layout_marginEnd="8dp" />
+
+    <ImageView
+        android:id="@+id/ivMsgD"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_message" />
+
+
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/btnDetailsD"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Details"
+      android:onClick="goToReservationDetails"
+      android:backgroundTint="@color/primaryButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

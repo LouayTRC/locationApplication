@@ -46,4 +46,7 @@ public class Reservation {
                 ",dateDiff"+ diffDays+
                 '}';
     }
+    public boolean driver() {
+        return driver;
+    }
 }

@@ -132,7 +132,7 @@ public class ReservationDetails extends AppCompatActivity {
             driverPriceTextView.setVisibility(View.VISIBLE);
             driverPriceTextView.setText(String.valueOf(prixDSupplementaire + " TND"));
         }
-        else {driverPriceTextView.setVisibility(View.VISIBLE);}
+        else {driverPriceTextView.setVisibility(View.GONE);}
 
 
 

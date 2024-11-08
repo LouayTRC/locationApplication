@@ -19,6 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Discussions"
+            android:onClick="goToDiscussions"
             android:background="@drawable/rounded_button"
             android:layout_weight="1"
             android:layout_margin="8dp"/>

@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.locationapp.ChatActivity;
 import com.example.locationapp.R;
 
 public class ClientHome extends AppCompatActivity {
@@ -28,6 +29,10 @@ public class ClientHome extends AppCompatActivity {
 
     public void goToCarList(View view){
         Intent intent=new Intent(this, CarResearch.class);
+        startActivity(intent);
+    }
+    public void goToDiscussions(View view){
+        Intent intent=new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 }

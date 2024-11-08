@@ -8,10 +8,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.example.locationapp.Client.FirstReservation;
 import com.example.locationapp.databinding.ActivityDetailedBinding;
 
 import java.text.SimpleDateFormat;
@@ -51,7 +50,11 @@ public class CarDetails extends AppCompatActivity {
             binding.detailPrice.setText(String.valueOf(intent.getDoubleExtra("price", 0)));
             binding.detailDescription.setText(intent.getStringExtra("description"));
             binding.detailFeatures.setText(intent.getStringExtra("features"));
-
+            String source=intent.getStringExtra("source");
+            if (source!=null && source.equals("admin")){
+                findViewById(R.id.reserveButton).setVisibility(View.GONE);
+                findViewById(R.id.datesLayout).setVisibility(View.GONE);
+            }
             String encodedImage = intent.getStringExtra("picture");
             if (encodedImage != null) {
                 setImageFromEncodedString(encodedImage);

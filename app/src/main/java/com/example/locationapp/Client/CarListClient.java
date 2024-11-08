@@ -1,15 +1,23 @@
-package com.example.locationapp;
+package com.example.locationapp.Client;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.locationapp.Admin.CarListAdmin;
+import com.example.locationapp.CarDetails;
+import com.example.locationapp.CarListAdapter;
+import com.example.locationapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,41 +29,39 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import services.CarService;
 
-public class CarList extends AppCompatActivity {
-
+public class CarListClient extends AppCompatActivity {
     private List<Car> dataArrayList;
     private List<Car> filteredList;
     private ListView listView;
-    private ListAdapter listAdapter;
+    private CarListAdapter carListAdapter;
     private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_cars_activity);
+        setContentView(R.layout.activity_car_list_client);
 
-        listView = findViewById(R.id.listview);
-        searchView = findViewById(R.id.searchView);
+        listView = findViewById(R.id.listview2);
+        searchView = findViewById(R.id.searchView2);
         dataArrayList = new ArrayList<>();
         filteredList = new ArrayList<>(); // Initialize filteredList here
 
         // Fetch cars using the CarService
         fetchCars();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Car selectedCar = filteredList.get(position);
-                Intent intent = new Intent(CarList.this, CarDetails.class);
-                intent.putExtra("model", selectedCar.model);
-                intent.putExtra("price", selectedCar.price);
-                intent.putExtra("features", selectedCar.features);
-                intent.putExtra("description", selectedCar.description);
-                intent.putExtra("picture", selectedCar.picture);
-                intent.putExtra("_id", selectedCar._id);
-                startActivity(intent);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Car selectedCar = filteredList.get(position);
+            Intent intent = new Intent(CarListClient.this, CarDetails.class);
+            intent.putExtra("model", selectedCar.model);
+            intent.putExtra("price", selectedCar.price);
+            intent.putExtra("features", selectedCar.features);
+            intent.putExtra("description", selectedCar.description);
+            intent.putExtra("picture", selectedCar.picture);
+            intent.putExtra("_id", selectedCar._id);
+            startActivity(intent);
         });
+
+
 
         // Set up search functionality
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -83,24 +89,18 @@ public class CarList extends AppCompatActivity {
                     dataArrayList.addAll(response.body());
                     filteredList.clear(); // Clear filtered list before adding data
                     filteredList.addAll(dataArrayList); // Initialize filtered list
-                    listAdapter = new ListAdapter(CarList.this, (ArrayList<Car>) filteredList);
-                    listView.setAdapter(listAdapter);
+                    carListAdapter = new CarListAdapter(CarListClient.this, (ArrayList<Car>) filteredList);
+                    listView.setAdapter(carListAdapter);
                 } else {
-                    Toast.makeText(CarList.this, "Failed to fetch cars", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CarListClient.this, "Failed to fetch cars", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Car>> call, Throwable t) {
-                Toast.makeText(CarList.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CarListClient.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void goToAddCar(View view){
-
-        Intent intent = new Intent(CarList.this, AddCar.class);
-        startActivity(intent);
     }
 
     private void filter(String text) {
@@ -114,6 +114,7 @@ public class CarList extends AppCompatActivity {
                 }
             }
         }
-        listAdapter.notifyDataSetChanged(); // Notify adapter about data changes
+        carListAdapter.notifyDataSetChanged(); // Notify adapter about data changes
     }
+
 }

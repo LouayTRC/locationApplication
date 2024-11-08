@@ -49,6 +49,34 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/editCarLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="25dp"
+            android:layout_toEndOf="@id/listName">
+
+            <ImageView
+                android:id="@+id/ivCancel"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cancel_red"
+                />
+            <Button
+                android:id="@+id/updateCarBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:onClick="goToReservationDetails"
+                android:backgroundTint="@color/primaryButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </LinearLayout>
     </RelativeLayout>
+
 
 </androidx.cardview.widget.CardView>

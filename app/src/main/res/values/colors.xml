@@ -7,9 +7,9 @@
     <color name="turquoise_700">#20B2AA</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="turquoise_light">#48D1CC</color>
-    <color name="green">#4CAF50</color>
-    <color name="light_green">#81C784</color>
+    <color name="turquoise_light">#48D1CC</color> <!-- Replacing lavender -->
+    <color name="green">#4CAF50</color> <!-- A solid green for acceptance -->
+    <color name="light_green">#81C784</color> <!-- A lighter green for button background -->
     <color name="red">#F44336</color>
     <color name="primaryButton">#A4D76C</color>
     <color name="cancelRed">#FF6666</color>

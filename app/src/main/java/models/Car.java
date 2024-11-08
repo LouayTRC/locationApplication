@@ -1,6 +1,9 @@
 package models;
 
-public class Car {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Car implements Parcelable {
     public String _id;
     public String model;
     public Integer year;
@@ -12,14 +15,60 @@ public class Car {
     public Category category;
     public Integer status;
 
-    public Car(String model,Integer year,double price,String features,String description,String picture,Marque marque,Category category){
-        this.model=model;
-        this.year=year;
-        this.price=price;
-        this.description=description;
-        this.features=features;
-        this.picture=picture;
-        this.marque=marque;
-        this.category=category;
+    public Car(String model, Integer year, double price, String features, String description, String picture, Marque marque, Category category) {
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        this.description = description;
+        this.features = features;
+        this.picture = picture;
+        this.marque = marque;
+        this.category = category;
     }
+
+    // Parcelable implementation
+    protected Car(Parcel in) {
+        _id = in.readString();
+        model = in.readString();
+        year = (Integer) in.readValue(Integer.class.getClassLoader());
+        price = in.readDouble();
+        description = in.readString();
+        features = in.readString();
+        picture = in.readString();
+        // If Marque and Category are also Parcelable, read them here
+        marque = in.readParcelable(Marque.class.getClassLoader());
+        category = in.readParcelable(Category.class.getClassLoader());
+        status = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(model);
+        dest.writeValue(year);
+        dest.writeDouble(price);
+        dest.writeString(description);
+        dest.writeString(features);
+        dest.writeString(picture);
+        dest.writeParcelable(marque, flags); // If Marque is Parcelable
+        dest.writeParcelable(category, flags); // If Category is Parcelable
+        dest.writeValue(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Car> CREATOR = new Creator<Car>() {
+        @Override
+        public Car createFromParcel(Parcel in) {
+            return new Car(in);
+        }
+
+        @Override
+        public Car[] newArray(int size) {
+            return new Car[size];
+        }
+    };
 }

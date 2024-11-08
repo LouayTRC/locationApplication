@@ -14,7 +14,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".AddCar">
+    tools:context=".Admin.AddCar">
 
     <TextView
         android:id="@+id/add_car"

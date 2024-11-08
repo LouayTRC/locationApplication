@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="#F5F5F5"
-    tools:context=".ReservationDetails">
+    tools:context=".Admin.ReservationDetails">
 
     <!-- Facture Header -->
     <TextView

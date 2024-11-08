@@ -1,4 +1,4 @@
-package com.example.locationapp;
+package com.example.locationapp.Admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.locationapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

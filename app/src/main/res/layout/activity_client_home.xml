@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@drawable/home">
-
-    <!-- Spacer View to push buttons to the bottom -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    tools:context=".Client.ClientHome">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center">
 
         <Button
             android:id="@+id/Button6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Admin"
+            android:text="Discussions"
             android:background="@drawable/rounded_button"
-            android:onClick="goToAdminHome"
             android:layout_weight="1"
             android:layout_margin="8dp"/>
 
@@ -32,9 +27,9 @@
             android:id="@+id/goCars"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Driver"
+            android:text="Cars"
             android:background="@drawable/rounded_button"
-            android:onClick="goToDriverHome"
+            android:onClick="goToCarList"
             android:layout_weight="1"
             android:layout_margin="8dp"/>
 
@@ -42,11 +37,11 @@
             android:id="@+id/Button7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Client"
+            android:text="Reservations"
             android:background="@drawable/rounded_button"
-            android:onClick="goToClientHome"
             android:layout_weight="1"
             android:layout_margin="8dp"/>
-    </LinearLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

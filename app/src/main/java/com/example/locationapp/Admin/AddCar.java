@@ -1,4 +1,4 @@
-package com.example.locationapp;
+package com.example.locationapp.Admin;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.locationapp.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -223,12 +224,15 @@ public class AddCar extends AppCompatActivity {
         CarService carService = RetrofitClient.getRetrofitInstance().create(CarService.class);
 
         // Make the network request to add the car
-        carService.addCar(newCar).enqueue(new Callback<Void>() {
+        carService.addCar(newCar).enqueue(new Callback<Car>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<Car> call, Response<Car> response) {
                 if (response.isSuccessful()) {
                     // Show a success message
                     Toast.makeText(AddCar.this, "Car added successfully!", Toast.LENGTH_SHORT).show();
+                    Intent intent=getIntent();
+                    intent.putExtra("car",response.body());
+                    setResult(RESULT_OK,intent);
                     finish(); // Optionally close the activity or redirect
                 } else {
                     Toast.makeText(AddCar.this, "Failed to add car.", Toast.LENGTH_SHORT).show();
@@ -236,7 +240,7 @@ public class AddCar extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<Car> call, Throwable t) {
                 Toast.makeText(AddCar.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -271,5 +275,7 @@ public class AddCar extends AppCompatActivity {
         Log.d("Request : ",newCar.toString());
         // Send the new car data
         sendNewCar(newCar);
+
+
     }
 }

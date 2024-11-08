@@ -1,7 +1,6 @@
-package com.example.locationapp;
+package com.example.locationapp.Client;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +14,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.locationapp.CarDetails;
+import com.example.locationapp.CarListAdapter;
+import com.example.locationapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class CarResearch extends AppCompatActivity {
     private ListView carListView;
     private List<Car> carList;
     private List<Car> filteredCars;
-    private ListAdapter carAdapter;
+    private CarListAdapter carAdapter;
     private TextInputEditText textInputMinPrice, textInputMaxPrice;
     private List<Marque> marques;
     private List<Category> categories;
@@ -255,7 +257,7 @@ public class CarResearch extends AppCompatActivity {
 
     private void updateListView() {
         if (carAdapter == null) {
-            carAdapter =  new ListAdapter(this, (ArrayList<Car>) filteredCars);
+            carAdapter =  new CarListAdapter(this, (ArrayList<Car>) filteredCars);
             carListView.setAdapter(carAdapter);
         } else {
             carAdapter.notifyDataSetChanged();

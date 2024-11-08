@@ -20,5 +20,5 @@ public interface CarService {
     Call<Boolean> verifyCarAvailability(@Path("id") String carId, @Body AvailabilityRequest request);
 
     @POST("api/car")  // Endpoint for adding a new car
-    Call<Void> addCar(@Body AddCarRequest car);
+    Call<Car> addCar(@Body AddCarRequest car);
 }

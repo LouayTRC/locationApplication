@@ -58,9 +58,7 @@ dependencies {
     implementation (libs.retrofit)
     implementation(libs.osmdroid.android.v6120)
     implementation("com.github.bumptech.glide:glide:4.15.0")
-    implementation(libs.play.services.maps)
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui) // Glide library
+    implementation(libs.play.services.maps) // Glide library
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
     implementation (libs.converter.gson)
     implementation (libs.logging.interceptor)

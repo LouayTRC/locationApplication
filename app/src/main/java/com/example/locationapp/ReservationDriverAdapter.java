@@ -10,21 +10,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.locationapp.Admin.ReservationDetails;
+
 import java.util.List;
 
-import Config.RetrofitClient;
 import models.Reservation;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import services.PictureService;
 import services.PictureServiceImpl;
-import services.ReservationService;
 
 public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDriverAdapter.ReservationViewHolder> {
 

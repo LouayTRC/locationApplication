@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+
+import com.example.locationapp.Admin.AdminHome;
+import com.example.locationapp.Client.ClientHome;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,18 +18,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void goToCarList(View view) {
-        Intent intent = new Intent(MainActivity.this, CarList.class);
+    public void goToAdminHome(View view) {
+        Intent intent = new Intent(MainActivity.this, AdminHome.class);
         startActivity(intent);
     }
 
-    public void goToCarResearch(View view) {
-        Intent intent = new Intent(MainActivity.this, CarResearch.class);
+    public void goToClientHome(View view) {
+        Intent intent = new Intent(MainActivity.this, ClientHome.class);
         startActivity(intent);
     }
 
-    public void goToReservationList(View view) {
-        Intent intent = new Intent(this, ReservationList.class);
+    public void goToDriverHome(View view) {
+        Intent intent = new Intent(this, DriverHome.class);
         startActivity(intent);
     }
     public void goToReservationDriverList(View view) {

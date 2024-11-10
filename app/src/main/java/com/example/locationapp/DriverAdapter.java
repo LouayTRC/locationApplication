@@ -37,8 +37,8 @@ public class DriverAdapter extends RecyclerView.Adapter<DriverAdapter.DriverView
     @Override
     public void onBindViewHolder(@NonNull DriverViewHolder holder, int position) {
         Driver driver = drivers.get(position);
-        holder.nameTextView.setText(driver.getName()); // Make sure Driver has a getName() method
-        holder.phoneTextView.setText(driver.getPhoneNumber()); // Make sure Driver has a getPhoneNumber() method
+        holder.nameTextView.setText(driver.user.name); // Make sure Driver has a getName() method
+        holder.phoneTextView.setText(driver.user.phone); // Make sure Driver has a getPhoneNumber() method
 
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(driver));
     }

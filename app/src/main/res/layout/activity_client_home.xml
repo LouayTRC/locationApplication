@@ -88,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Reservations"
+                    android:onClick="goToMyReservations"
                     android:textColor="@android:color/white"
                     android:background="@drawable/rounded_button"
                     android:padding="16dp"

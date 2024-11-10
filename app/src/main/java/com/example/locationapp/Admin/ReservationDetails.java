@@ -108,7 +108,7 @@ public class ReservationDetails extends AppCompatActivity {
         reservedByTextView.setText(reservation.client.user.name);
         carModelTextView.setText(reservation.car.model);
         reservationDatesTextView.setText(formattedStartDate + " - " + formattedEndDate);
-        driverOptionTextView.setText(reservation.driver!=null ? "Yes" : "No");
+        driverOptionTextView.setText(reservation.driver!=null ? reservation.driver.user.name : "No Driver Requested");
 
 
 

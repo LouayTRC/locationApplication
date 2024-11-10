@@ -21,6 +21,9 @@ public interface ReservationService {
     @GET("api/reservation/{id}") // Récupérer la liste des réservations
     Call<Reservation> getReservationById(@Path("id") String reservationId);
 
+    @GET("api/reservation/user/{id}") // Récupérer la liste des réservations
+    Call<List<Reservation>> getReservationsByUserId(@Path("id") String userId);
+
     @GET("api/reservation") // Récupérer la liste des réservations
     Call<List<Reservation>> getReservations();
 

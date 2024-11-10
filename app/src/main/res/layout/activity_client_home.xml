@@ -17,7 +17,7 @@
         <Button
             android:id="@+id/Button6"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="Discussions"
             android:onClick="goToDiscussions"
             android:background="@drawable/rounded_button"
@@ -27,7 +27,7 @@
         <Button
             android:id="@+id/goCars"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="Cars"
             android:background="@drawable/rounded_button"
             android:onClick="goToCarList"
@@ -37,8 +37,9 @@
         <Button
             android:id="@+id/Button7"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="Reservations"
+            android:onClick="goToMyReservations"
             android:background="@drawable/rounded_button"
             android:layout_weight="1"
             android:layout_margin="8dp"/>

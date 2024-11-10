@@ -66,7 +66,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
         // Display client information
         if (reservation.client != null && reservation.client.user != null) {
-            holder.tvClientName.setText(reservation.client.user.getName());
+            holder.tvClientName.setText(reservation.client.user.name);
         } else {
             holder.tvClientName.setText("Client information unavailable");
         }

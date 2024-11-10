@@ -3,40 +3,40 @@ package com.example.locationapp;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.locationapp.Admin.ReservationDetails;
+import com.example.locationapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import models.Reservation;
 import services.PictureService;
 import services.PictureServiceImpl;
 
-public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDriverAdapter.ReservationViewHolder> {
-
+public class ClientReservationsAdapter extends RecyclerView.Adapter<ClientReservationsAdapter.ReservationViewHolder> {
     private Context context;
     private List<Reservation> reservationList;
 
-    public ReservationDriverAdapter(Context context, List<Reservation> reservations) {
+    public ClientReservationsAdapter(Context context, List<Reservation> reservationList) {
         this.context = context;
-        this.reservationList = reservations;
+        this.reservationList = reservationList;
     }
 
     @NonNull
     @Override
     public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_rersevation_driver_adapter, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_client_reservations_adapter, parent, false);
         return new ReservationViewHolder(itemView);
     }
 
@@ -45,10 +45,8 @@ public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDr
         Reservation reservation = reservationList.get(position);
         Log.d("Reservation", reservation.toString());
 
-        // Display car information
         if (reservation.car != null) {
             holder.tvCarName.setText(reservation.car.model);
-
             PictureService pictureService = new PictureServiceImpl();
             Bitmap pic = pictureService.decompressBase64ToImage(reservation.car.picture);
             holder.ivCarImage.setImageBitmap(pic);
@@ -56,14 +54,10 @@ public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDr
             holder.tvCarName.setText("Car information unavailable");
         }
 
-        // Display client information
-        if (reservation.client != null && reservation.client.user != null) {
-            holder.tvClientName.setText(reservation.client.user.name);
-        } else {
-            holder.tvClientName.setText("Client information unavailable");
-        }
-
-        // Set click listeners for buttons
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedStartDate = dateFormat.format(reservation.dateStart);
+        String formattedEndDate = dateFormat.format(reservation.dateEnd);
+        holder.tvDates.setText(formattedStartDate + " - " + formattedEndDate);
 
         holder.btnDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, ReservationDetails.class);
@@ -78,21 +72,16 @@ public class ReservationDriverAdapter extends RecyclerView.Adapter<ReservationDr
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tvCarName, tvClientName;
-        ImageView ivCheck, ivMsg;
+        TextView tvCarName, tvDates;
         Button btnDetails;
         ImageView ivCarImage;
 
         public ReservationViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvCarName = itemView.findViewById(R.id.tvCarNameD);
-            tvClientName = itemView.findViewById(R.id.tvClientNameD);
-            ivCheck = itemView.findViewById(R.id.ivCheckD);
-            ivMsg = itemView.findViewById(R.id.ivMsgD);
-            btnDetails = itemView.findViewById(R.id.btnDetailsD);
-            ivCarImage = itemView.findViewById(R.id.ivCarImageD);
+            tvCarName = itemView.findViewById(R.id.tvCarName);
+            tvDates = itemView.findViewById(R.id.tvDatesReservation);
+            btnDetails = itemView.findViewById(R.id.btnDetails);
+            ivCarImage = itemView.findViewById(R.id.ivCarImage);
         }
     }
-
 }

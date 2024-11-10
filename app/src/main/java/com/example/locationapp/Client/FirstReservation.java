@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.locationapp.R;
+import com.example.locationapp.Signup;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.views.MapView;
@@ -27,8 +29,17 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.util.GeoPoint;
 
+import Config.RetrofitClient;
+import models.Location;
+import models.Requests.ReserveRequest;
+import models.Reservation;
+import models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import services.PictureService;
 import services.PictureServiceImpl;
+import services.ReservationService;
 
 public class FirstReservation extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -45,7 +56,8 @@ public class FirstReservation extends AppCompatActivity {
     private ImageView image;
     private GeoPoint startingLocation;
     private GeoPoint latestSelectedLocation;
-
+    private User connectedUser;
+    private String token;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -53,6 +65,8 @@ public class FirstReservation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Configuration.getInstance().load(this, getPreferences(MODE_PRIVATE));
         setContentView(R.layout.activity_first_reservation);
+
+        Intent intent=getIntent();
 
         // Initialize TextViews
         startDateDisplay = findViewById(R.id.startDateInput);
@@ -127,7 +141,7 @@ public class FirstReservation extends AppCompatActivity {
 
         Button submitButton = findViewById(R.id.reserveButton);
         submitButton.setOnClickListener(v -> {
-            goToReserveCar();
+            reserveCar();
         });
     }
     private void getAndDisplayCar(){
@@ -252,28 +266,59 @@ public class FirstReservation extends AppCompatActivity {
         }
     }
 
-    private void goToReserveCar() {
+    private void reserveCar() {
         String startDate = startDateDisplay.getText().toString();
         String endDate = endDateDisplay.getText().toString(); // Assume driver is required or retrieved from your logic
         Double deliveryLongitude = null;
         Double deliveryLatitude = null;
-
+        Location location=null;
         // Check if delivery is enabled to pass location or null values
         if (this.deliveryYes) {
             deliveryLongitude = latestSelectedLocation.getLongitude();
             deliveryLatitude = latestSelectedLocation.getLatitude();
+
+            if (!Double.isNaN(deliveryLongitude) && !Double.isNaN(deliveryLatitude)) {
+                location = new Location(deliveryLatitude, deliveryLongitude);
+            } else {
+                location = null; // Or set to a default location if needed
+            }
         }
         Intent oldIntent=getIntent();
 
-        Intent intent = new Intent(this, ReserveCar.class);
-        // Put the extras in the intent
-        intent.putExtra("startDate", startDate);
-        intent.putExtra("endDate", endDate);
-        intent.putExtra("driverYes", driverYes); // Pass the driver boolean value
-        // Pass the longitude and latitude values
-        intent.putExtra("deliveryLongitude", deliveryLongitude);
-        intent.putExtra("deliveryLatitude", deliveryLatitude);
-        intent.putExtra("carId",oldIntent.getStringExtra("carId"));
-        startActivity(intent);
+        User user=oldIntent.getParcelableExtra("user");
+        Log.d("reservation",user.toString());
+        String carId=oldIntent.getStringExtra("carId");
+
+        // Create Reservation object
+        ReserveRequest reservation = new ReserveRequest(carId, user._id, location, driverYes,startDate,endDate);
+
+        ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
+        Log.d("request reservation:",reservation.toString());
+
+        Call<Reservation> reservationCall = reservationService.reserver(reservation);
+        reservationCall.enqueue(new Callback<Reservation>() {
+            @Override
+            public void onResponse(Call<Reservation> call, Response<Reservation> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Reservation res = response.body();
+                    // Log the successful reservation
+                    Log.d("ReservationLog", res.toString());
+                    Toast.makeText(FirstReservation.this, "Reservation added successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    // Log the error response
+                    Log.e("ReservationLog", "Error: " + response.code() + " - " + response.message());
+                    Toast.makeText(FirstReservation.this, "Error adding Reservation: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Reservation> call, Throwable t) {
+                // Log the failure message
+                Log.e("ReservationLog", "Failure: " + t.getMessage());
+                Toast.makeText(FirstReservation.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

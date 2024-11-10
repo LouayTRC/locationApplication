@@ -2,6 +2,7 @@ package com.example.locationapp.Admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -22,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import services.CarService;
 
-public class CarListAdmin extends AppCompatActivity implements CarListAdapterAdmin.OnCarUpdatedListener {
+public class CarListAdmin extends AppCompatActivity {
 
     public static final int ADDCAR_CODE = 1;
     public static final int UPDATE_CAR_CODE = 2;
@@ -85,7 +86,7 @@ public class CarListAdmin extends AppCompatActivity implements CarListAdapterAdm
                     dataArrayList.addAll(response.body());
                     filteredList.clear();
                     filteredList.addAll(dataArrayList);
-                    carListAdapter = new CarListAdapterAdmin(CarListAdmin.this, (ArrayList<Car>) filteredList, CarListAdmin.this);
+                    carListAdapter = new CarListAdapterAdmin(CarListAdmin.this, (ArrayList<Car>) filteredList);
                     listView.setAdapter(carListAdapter);
                 } else {
                     Toast.makeText(CarListAdmin.this, "Failed to fetch cars", Toast.LENGTH_SHORT).show();
@@ -126,7 +127,8 @@ public class CarListAdmin extends AppCompatActivity implements CarListAdapterAdm
             Car newCar = data.getParcelableExtra("car");
             carListAdapter.add(newCar);
         } else if (requestCode == UPDATE_CAR_CODE && resultCode == RESULT_OK) {
-            Car updatedCar = data.getParcelableExtra("car");
+            Car updatedCar = data.getParcelableExtra("updatedCar");
+            Log.d("ud",updatedCar.toString());
             if (updatedCar != null) {
                 updateCarInList(updatedCar);
             }
@@ -143,8 +145,4 @@ public class CarListAdmin extends AppCompatActivity implements CarListAdapterAdm
         carListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onUpdateCar(int position, Car car) {
-        updateCarInList(car);
-    }
 }

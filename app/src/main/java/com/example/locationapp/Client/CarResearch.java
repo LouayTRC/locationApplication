@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import Config.RetrofitClient;
 import models.Car;
 import models.Marque;
 import models.Category;
+import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,12 +45,19 @@ public class CarResearch extends AppCompatActivity {
     private TextInputEditText textInputMinPrice, textInputMaxPrice;
     private List<Marque> marques;
     private List<Category> categories;
+    private User connectedUser;
+    private String token;
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_research);
+
+        Intent intent=getIntent();
+        connectedUser=intent.getParcelableExtra("user");
+        token=intent.getStringExtra("token");
+        Log.d("carResearch",connectedUser.toString());
 
         marqueSpinner = findViewById(R.id.spinnerMarque);
         categorySpinner = findViewById(R.id.spinnerCategory);
@@ -122,6 +131,8 @@ public class CarResearch extends AppCompatActivity {
                 intent.putExtra("description", selectedCar.description);
                 intent.putExtra("picture", selectedCar.picture);
                 intent.putExtra("_id", selectedCar._id);
+                intent.putExtra("user",connectedUser);
+                intent.putExtra("token",token);
                 startActivity(intent);
             }
         });

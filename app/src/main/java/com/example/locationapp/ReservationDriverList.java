@@ -61,7 +61,7 @@ public class ReservationDriverList extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     reservationList.clear();
                     for (Reservation reservation : response.body()) {
-                        if (reservation.driver()) {
+                        if (reservation.driver!=null) {
                             reservationList.add(reservation);
                         }
                     }

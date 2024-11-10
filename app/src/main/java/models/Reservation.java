@@ -1,5 +1,6 @@
 package models;
 
+
 import java.util.Date;
 
 public class Reservation {
@@ -11,13 +12,13 @@ public class Reservation {
     public Double distanceEnKm;
     public Date dateStart; // Start date of the reservation
     public Date dateEnd; // End date of the reservation
-    public boolean driver; // Indicates if a driver is assigned
+    public Driver driver; // Indicates if a driver is assigned
     public Integer status; // Status of the reservation
     public Double total;
     public Integer diffDays;// Total cost of the reservation
 
     // Constructor
-    public Reservation(Client client, Car car, String locationLong, String locationLat, Date dateStart, Date dateEnd, boolean driver, Double total,Integer dateDiff) {
+    public Reservation(Client client, Car car, String locationLong, String locationLat, Date dateStart, Date dateEnd, Driver driver, Double total,Integer dateDiff) {
         this.client = client;
         this.car = car; // Changed to assign Car object
         this.locationLong = locationLong;
@@ -46,7 +47,5 @@ public class Reservation {
                 ",dateDiff"+ diffDays+
                 '}';
     }
-    public boolean driver() {
-        return driver;
-    }
+
 }

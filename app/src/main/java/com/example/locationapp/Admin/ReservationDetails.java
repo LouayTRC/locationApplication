@@ -105,10 +105,10 @@ public class ReservationDetails extends AppCompatActivity {
 
 
         double prixDSupplementaire=reservation.diffDays*50;
-        reservedByTextView.setText(reservation.client.user.getName());
+        reservedByTextView.setText(reservation.client.user.name);
         carModelTextView.setText(reservation.car.model);
         reservationDatesTextView.setText(formattedStartDate + " - " + formattedEndDate);
-        driverOptionTextView.setText(reservation.driver ? "Yes" : "No");
+        driverOptionTextView.setText(reservation.driver!=null ? "Yes" : "No");
 
 
 
@@ -124,7 +124,7 @@ public class ReservationDetails extends AppCompatActivity {
         } else {
             livraisonPriceTextView.setVisibility(View.GONE); // Masquer si ce n'est pas "Yes"
         }
-        if(reservation.driver){
+        if(reservation.driver!=null){
             driverPriceTextView.setVisibility(View.VISIBLE);
             driverPriceTextView.setText(String.valueOf(prixDSupplementaire + " TND"));
         }

@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import java.util.Locale;
 
 import Config.RetrofitClient;
 import models.Requests.AvailabilityRequest;
+import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +35,8 @@ public class CarDetails extends AppCompatActivity {
     private String startDateStr;
     private String endDateStr;
     private Intent intent;
-
+    private User connectedUser;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,10 @@ public class CarDetails extends AppCompatActivity {
             binding.detailDescription.setText(intent.getStringExtra("description"));
             binding.detailFeatures.setText(intent.getStringExtra("features"));
             String source=intent.getStringExtra("source");
+            connectedUser=intent.getParcelableExtra("user");
+            token=intent.getStringExtra("token");
+            Log.d("carDetails",connectedUser.toString());
+
             if (source!=null && source.equals("admin")){
                 findViewById(R.id.reserveButton).setVisibility(View.GONE);
                 findViewById(R.id.datesLayout).setVisibility(View.GONE);
@@ -124,6 +131,8 @@ public class CarDetails extends AppCompatActivity {
                             newIntent.putExtra("carId",carId);
                             newIntent.putExtra("model",intent.getStringExtra("model"));
                             newIntent.putExtra("picture",intent.getStringExtra("picture"));
+                            newIntent.putExtra("user",connectedUser);
+                            newIntent.putExtra("token",token);
                             // Pass end date as extra
                             startActivity(newIntent);
                         } else {

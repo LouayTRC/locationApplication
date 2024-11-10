@@ -35,7 +35,6 @@ public class Car implements Parcelable {
         description = in.readString();
         features = in.readString();
         picture = in.readString();
-        // If Marque and Category are also Parcelable, read them here
         marque = in.readParcelable(Marque.class.getClassLoader());
         category = in.readParcelable(Category.class.getClassLoader());
         status = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -50,8 +49,8 @@ public class Car implements Parcelable {
         dest.writeString(description);
         dest.writeString(features);
         dest.writeString(picture);
-        dest.writeParcelable(marque, flags); // If Marque is Parcelable
-        dest.writeParcelable(category, flags); // If Category is Parcelable
+        dest.writeParcelable(marque, flags);
+        dest.writeParcelable(category, flags);
         dest.writeValue(status);
     }
 
@@ -71,4 +70,21 @@ public class Car implements Parcelable {
             return new Car[size];
         }
     };
+
+    // toString method to return a string representation of the Car object
+    @Override
+    public String toString() {
+        return "Car{" +
+                "_id='" + _id + '\'' +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", features='" + features + '\'' +
+                ", picture='" + picture + '\'' +
+                ", marque=" + (marque != null ? marque.name : "null") +
+                ", category=" + (category != null ? category.name : "null") +
+                ", status=" + status +
+                '}';
+    }
 }

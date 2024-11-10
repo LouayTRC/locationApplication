@@ -19,7 +19,19 @@
         android:theme="@style/Theme.AppCompat"
         tools:targetApi="31">
         <activity
-            android:name=".UpdateCar"
+            android:name=".ClientReservationsAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".DriverReservations"
+            android:exported="false" />
+        <activity
+            android:name=".Client.ClientReservations"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.UpdateCar"
             android:exported="false" />
         <activity
             android:name=".Admin.CarListAdapterAdmin"
@@ -49,7 +61,7 @@
             android:name=".Client.FirstReservation"
             android:exported="false" />
         <activity
-            android:name=".Client.ReserveCar"
+            android:name=".Signup"
             android:exported="false" />
         <activity
             android:name=".Client.CarResearch"

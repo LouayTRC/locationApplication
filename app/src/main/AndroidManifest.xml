@@ -18,63 +18,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         tools:targetApi="31">
-        <activity
-            android:name=".UpdateCar"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.CarListAdapterAdmin"
-            android:exported="false" />
-        <activity
-            android:name=".Client.CarListClient"
-            android:exported="false" />
-        <activity
-            android:name=".Client.ClientHome"
-            android:exported="false" />
-        <activity
-            android:name=".DriverHome"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.AdminHome"
-            android:exported="false" />
-        <activity
-            android:name=".ReservationDriverList"
-            android:exported="false" />
-        <activity
-            android:name=".ReservationDriverAdapter"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.ReservationDetails"
-            android:exported="true" />
-        <activity
-            android:name=".Client.FirstReservation"
-            android:exported="false" />
-        <activity
-            android:name=".Client.ReserveCar"
-            android:exported="false" />
-        <activity
-            android:name=".Client.CarResearch"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.AddCar"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.CarListAdmin"
-            android:exported="true" />
-        <activity
-            android:name=".CarDetails"
-            android:exported="false" />
-        <activity
-            android:name=".Admin.ReservationList"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+
+        <activity android:name=".DiscussionListActivity" android:exported="false" />
+        <activity android:name=".ChatActivity" android:exported="false" />
+
+        <activity android:name=".UpdateCar" android:exported="false" />
+        <activity android:name=".Admin.CarListAdapterAdmin" android:exported="false" />
+        <activity android:name=".Client.CarListClient" android:exported="false" />
+        <activity android:name=".Client.ClientHome" android:exported="false" />
+        <activity android:name=".DriverHome" android:exported="false" />
+        <activity android:name=".Admin.AdminHome" android:exported="false" />
+        <activity android:name=".ReservationDriverList" android:exported="false" />
+        <activity android:name=".ReservationDriverAdapter" android:exported="false" />
+        <activity android:name=".Admin.ReservationDetails" android:exported="true" />
+        <activity android:name=".Client.FirstReservation" android:exported="false" />
+        <activity android:name=".Client.ReserveCar" android:exported="false" />
+        <activity android:name=".Client.CarResearch" android:exported="false" />
+        <activity android:name=".Admin.AddCar" android:exported="false" />
+        <activity android:name=".Admin.CarListAdmin" android:exported="true" />
+        <activity android:name=".CarDetails" android:exported="false" />
+        <activity android:name=".Admin.ReservationList" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

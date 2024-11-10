@@ -1,8 +1,9 @@
 package com.example.locationapp;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,7 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerViewMessages;
     private EditText editTextMessage;
     private View buttonSend;
-    private List<String> messages = new ArrayList<>(); // Replace with a Message model in real implementation
+    private List<String> messages = new ArrayList<>();
     private ChatAdapter chatAdapter;
 
     @Override
@@ -22,6 +23,16 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // Initialize the TextView to show the driver name
+        TextView textViewDriverName = findViewById(R.id.textViewDriverName);
+        String driverName = getIntent().getStringExtra("driverName");
+        if (driverName != null) {
+            textViewDriverName.setText(driverName); // Display the driver name
+        } else {
+            textViewDriverName.setText("Unknown Driver");
+        }
+
+        // Initialize RecyclerView, EditText, and Send Button
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
@@ -30,14 +41,12 @@ public class ChatActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(messages);
         recyclerViewMessages.setAdapter(chatAdapter);
 
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = editTextMessage.getText().toString().trim();
-                if (!message.isEmpty()) {
-                    sendMessage(message);
-                    editTextMessage.setText("");
-                }
+        // Handle sending messages
+        buttonSend.setOnClickListener(v -> {
+            String message = editTextMessage.getText().toString().trim();
+            if (!message.isEmpty()) {
+                sendMessage(message);
+                editTextMessage.setText("");
             }
         });
     }
@@ -48,4 +57,3 @@ public class ChatActivity extends AppCompatActivity {
         recyclerViewMessages.scrollToPosition(messages.size() - 1);
     }
 }
-

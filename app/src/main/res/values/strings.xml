@@ -66,4 +66,6 @@
     <string name="car7Desc">Enjoy the open road with Car 7, a stylish convertible. Whether you re cruising along the coast or taking a scenic drive, this car adds a sense of freedom and excitement.</string>
     <string name="title_activity_reserver_car">ReserverCar</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="add_conversation">Add Conversation</string>
+
 </resources>

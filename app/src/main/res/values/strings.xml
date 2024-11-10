@@ -67,5 +67,7 @@
     <string name="title_activity_reserver_car">ReserverCar</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="add_conversation">Add Conversation</string>
+    <string name="select_role_prompt">Select a role</string>
+
 
 </resources>

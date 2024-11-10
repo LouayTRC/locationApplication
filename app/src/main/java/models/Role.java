@@ -39,5 +39,9 @@ public class Role implements Parcelable {
         parcel.writeString(_id);
         parcel.writeString(name);
     }
+
+    public String getName() {
+        return name;
+    }
 }
 

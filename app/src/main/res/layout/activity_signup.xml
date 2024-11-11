@@ -63,7 +63,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/name" /> <!-- Remplacez par votre icône -->
+            android:src="@drawable/name" />
 
         <EditText
             android:id="@+id/name"
@@ -90,7 +90,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/mail" /> <!-- Remplacez par votre icône -->
+            android:src="@drawable/mail" />
 
         <EditText
             android:id="@+id/email"
@@ -117,7 +117,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/phone" /> <!-- Remplacez par votre icône -->
+            android:src="@drawable/phone" />
 
         <EditText
             android:id="@+id/phone"
@@ -131,15 +131,6 @@
     </LinearLayout>
 
 
-    <Button
-        android:id="@+id/confirmButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Signup"
-        app:layout_constraintTop_toBottomOf="@id/phoneLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
 
     <LinearLayout
         android:id="@+id/passwordLayout"
@@ -150,7 +141,6 @@
         app:layout_constraintTop_toBottomOf="@id/phoneLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
 
         <EditText
             android:id="@+id/pwdInput"
@@ -173,16 +163,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/roleInput"
-            android:layout_width="0dp"
+        <!-- TextView acting as hint -->
+        <TextView
+            android:id="@+id/roleHint"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_weight="1"
-            android:hint="Enter Role : CLIENT / DRIVER"
-            android:textColorHint="@android:color/white"
-            android:textColor="@color/white"
-            android:inputType="text" />
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:text="Choisi ton rôle"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <!-- Spinner -->
+        <Spinner
+            android:id="@+id/roleSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/spinner_background"
+            android:padding="8dp"
+            android:popupBackground="@android:color/white"/>
     </LinearLayout>
 
+    <!-- Display the selected role after selection -->
+    <TextView
+        android:id="@+id/roleSelectedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ton rôle est :"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@id/roleLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signup"
+        app:layout_constraintTop_toBottomOf="@id/roleSelectedText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

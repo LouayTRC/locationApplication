@@ -1,196 +1,182 @@
 package com.example.locationapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Config.RetrofitClient;
-import models.Location;
-import models.Requests.ReserveRequest;
 import models.Requests.SignupRequest;
-import models.Reservation;
-import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import services.AuthService;
-import services.ReservationService;
+import services.RoleService;
+import models.Role;
 
 public class Signup extends AppCompatActivity {
-    private EditText cinEditText, nameEditText, emailEditText, phoneEditText,passwordEditText,roleEditText;
+    private EditText cinEditText, nameEditText, emailEditText, phoneEditText, passwordEditText;
+    private Spinner roleSpinner;
     private Button confirmButton;
+    private TextView roleHint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        // Initialize EditTexts
+        // Initialisation des vues
         cinEditText = findViewById(R.id.cin);
         nameEditText = findViewById(R.id.name);
         emailEditText = findViewById(R.id.email);
         phoneEditText = findViewById(R.id.phone);
-        passwordEditText=findViewById(R.id.pwdInput);
-        roleEditText=findViewById(R.id.roleInput);
+        passwordEditText = findViewById(R.id.pwdInput);
+        roleSpinner = findViewById(R.id.roleSpinner);
+        roleHint = findViewById(R.id.roleHint);
+        confirmButton = findViewById(R.id.confirmButton);
+        TextView roleSelectedText = findViewById(R.id.roleSelectedText);  // Le TextView qui affiche le rôle sélectionné
 
+        // Charger les rôles dans le Spinner
+        loadRoles();
 
-        // Initialize the button
-        confirmButton = findViewById(R.id.confirmButton); // Make sure you have a button in your layout
-
-        // Set up button click listener
+        // Configurer l'action du bouton
         confirmButton.setOnClickListener(v -> signup());
+        roleHint.setOnClickListener(v -> {
+            // S'assurer que le Spinner est activé ou visible pour l'utilisateur
+            roleSpinner.performClick();
+        });
+
+        // Ajouter un écouteur sur le Spinner pour afficher le rôle sélectionné
+        roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Obtenez l'élément sélectionné et mettez-le dans le TextView
+                String selectedRole = parentView.getItemAtPosition(position).toString();
+                roleSelectedText.setText("Ton rôle est : " + selectedRole);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Si rien n'est sélectionné, vous pouvez définir un texte par défaut
+                roleSelectedText.setText("Ton rôle est :");
+            }
+        });
     }
 
-    public void signup(){
+
+    private void loadRoles() {
+        RoleService roleService = RetrofitClient.getRetrofitInstance().create(RoleService.class);
+        Call<List<Role>> call = roleService.getRoles();
+
+        call.enqueue(new Callback<List<Role>>() {
+            @Override
+            public void onResponse(Call<List<Role>> call, Response<List<Role>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Role> roles = response.body();
+                    List<String> roleNames = new ArrayList<>();
+
+                    for (Role role : roles) {
+                        roleNames.add(role.getName()); // Supposons que `getName()` obtient le nom du rôle
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Signup.this, android.R.layout.simple_spinner_item, roleNames);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    roleSpinner.setAdapter(adapter);
+                } else {
+                    Toast.makeText(Signup.this, "Erreur lors du chargement des rôles.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Role>> call, Throwable t) {
+                Toast.makeText(Signup.this, "Erreur réseau : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void signup() {
         String cin = cinEditText.getText().toString().trim();
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String phone = phoneEditText.getText().toString().trim();
         String pwd = passwordEditText.getText().toString().trim();
-        String role = roleEditText.getText().toString().trim();
+        String role = roleSpinner.getSelectedItem().toString(); // Obtenir le rôle sélectionné dans le Spinner
 
-        SignupRequest signupRequest = new SignupRequest(cin, phone, email, pwd,name,role);
+        SignupRequest signupRequest = new SignupRequest(cin, phone, email, pwd, name, role);
 
-        AuthService authService=RetrofitClient.getRetrofitInstance().create(AuthService.class);
-        if (validateInputs()){
+        AuthService authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
+        if (validateInputs()) {
             Call<Void> signupCall = authService.signup(signupRequest);
             signupCall.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        // Log the successful reservation
                         if (role.equals("CLIENT")) {
-                            Toast.makeText(Signup.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Signup.this, "Compte créé avec succès!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(Signup.this, "Compte créé avec succès! Vous devez attendre l'accès.", Toast.LENGTH_SHORT).show();
                             finish();
                         }
-                        else {
-                            Toast.makeText(Signup.this, "Account created successfully! \n you must wait for access", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-
                     } else {
-                        // Log the error response
-                        Log.e("SignupLog", "Error: " + response.code() + " - " + response.message());
-                        Toast.makeText(Signup.this, "Error signup: " + response.message(), Toast.LENGTH_SHORT).show();
+                        Log.e("SignupLog", "Erreur : " + response.code() + " - " + response.message());
+                        Toast.makeText(Signup.this, "Erreur lors de l'inscription : " + response.message(), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    // Log the failure message
-                    Log.e("SignupLog", "Failure: " + t.getMessage());
-                    Toast.makeText(Signup.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("SignupLog", "Échec : " + t.getMessage());
+                    Toast.makeText(Signup.this, "Erreur réseau : " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
     private boolean validateInputs() {
-        // Check if model is empty
+        // Validation des champs comme dans le code original
         if (nameEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Name is required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nom requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // Check if year is valid
         String phone = phoneEditText.getText().toString().trim();
-        if (phone.length()!=8) {
-            Toast.makeText(this, "Phone is required and have 8 characters .", Toast.LENGTH_SHORT).show();
+        if (phone.length() != 8) {
+            Toast.makeText(this, "Le téléphone doit contenir 8 caractères.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // Check if price is valid
         String pwd = passwordEditText.getText().toString().trim();
         if (pwd.isEmpty()) {
-            Toast.makeText(this, "Password is required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Mot de passe requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // Check if features and description are empty
         if (emailEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Email is required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Email requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (cinEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Cin is required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "CIN requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (roleEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Role is required.", Toast.LENGTH_SHORT).show();
+        if (roleSpinner.getSelectedItem() == null) {
+            Toast.makeText(this, "Rôle requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         return true;
     }
-
-
-    /*private void handleReservation() {
-        // Retrieve inputs
-        String cin = cinEditText.getText().toString().trim();
-        String name = nameEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
-        String phone = phoneEditText.getText().toString().trim();
-
-        // Retrieve passed data
-        Intent intent = getIntent();
-        String dateStart = intent.getStringExtra("startDate");
-        String dateEnd = intent.getStringExtra("endDate");
-        boolean driverYes = intent.getBooleanExtra("driverYes", false);
-        Double deliveryLongitude = intent.getDoubleExtra("deliveryLongitude", Double.NaN);
-        Double deliveryLatitude = intent.getDoubleExtra("deliveryLatitude", Double.NaN);
-        String carId=intent.getStringExtra("carId");
-
-        // Create Location object
-        Location location;
-        if (!Double.isNaN(deliveryLongitude) && !Double.isNaN(deliveryLatitude)) {
-            location = new Location(deliveryLatitude, deliveryLongitude);
-        } else {
-            location = null; // Or set to a default location if needed
-        }
-
-        // Create Client object
-        //User user = new User(cin, name, email, phone);
-
-
-        // Create Reservation object
-        ReserveRequest reservation = new ReserveRequest(carId, user, location, driverYes,dateStart,dateEnd);
-
-        ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
-        Log.d("request:",reservation.toString());
-
-        Call<Reservation> reservationCall = reservationService.reserver(reservation);
-        reservationCall.enqueue(new Callback<Reservation>() {
-            @Override
-            public void onResponse(Call<Reservation> call, Response<Reservation> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Reservation res = response.body();
-                    // Log the successful reservation
-                    Log.d("ReservationLog", res.toString());
-                    Toast.makeText(Signup.this, "Reservation added successfully!", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    // Log the error response
-                    Log.e("ReservationLog", "Error: " + response.code() + " - " + response.message());
-                    Toast.makeText(Signup.this, "Error adding Reservation: " + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Reservation> call, Throwable t) {
-                // Log the failure message
-                Log.e("ReservationLog", "Failure: " + t.getMessage());
-                Toast.makeText(Signup.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }*/
 }

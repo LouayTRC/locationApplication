@@ -7,13 +7,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import models.Message;
+import models.User;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
 
-    private List<String> messages;
+    private List<Message> messages;
+    private User connectedUser;
 
-    public ChatAdapter(List<String> messages) {
+    public ChatAdapter(List<Message> messages, User connectedUser) {
         this.messages = messages;
+        this.connectedUser = connectedUser;
     }
 
     @NonNull
@@ -29,7 +33,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+        holder.bind(messages.get(position).description);
     }
 
     @Override
@@ -39,7 +43,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return position % 2 == 0 ? 1 : 0; // Sample logic for differentiating sender
+        // Check if the message sender is the connected user
+        return messages.get(position).sender._id.equals(connectedUser._id) ? 1 : 0;
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {

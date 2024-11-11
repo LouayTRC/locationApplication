@@ -7,17 +7,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import models.Discussion;
+import models.User;
 
 public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.DiscussionViewHolder> {
-
-    private List<String> discussions;
-    private OnItemClickListener listener;
+    private final User connectedUser;
+    private final List<Discussion> discussions;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(String driverName);
+        void onItemClick(Discussion discussion);
     }
 
-    public DiscussionAdapter(List<String> discussions, OnItemClickListener listener) {
+    public DiscussionAdapter(User user, List<Discussion> discussions, OnItemClickListener listener) {
+        this.connectedUser = user;
         this.discussions = discussions;
         this.listener = listener;
     }
@@ -31,8 +34,8 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
 
     @Override
     public void onBindViewHolder(@NonNull DiscussionViewHolder holder, int position) {
-        String driverName = discussions.get(position);
-        holder.bind(driverName, listener);
+        Discussion discussion = discussions.get(position);
+        holder.bind(discussion, connectedUser, listener);
     }
 
     @Override
@@ -41,16 +44,24 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
     }
 
     public static class DiscussionViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewDriverName;
+        private final TextView textViewDriverName;
 
         public DiscussionViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewDriverName = itemView.findViewById(R.id.textViewDriverName);
         }
 
-        public void bind(String driverName, OnItemClickListener listener) {
-            textViewDriverName.setText(driverName);
-            itemView.setOnClickListener(v -> listener.onItemClick(driverName));
+        public void bind(Discussion discussion, User connectedUser, OnItemClickListener listener) {
+            // Determine the other participant in the discussion
+            String otherParticipantName;
+            if (discussion.user1._id.equals(connectedUser._id)) {
+                otherParticipantName = discussion.user2.name;
+            } else {
+                otherParticipantName = discussion.user1.name;
+            }
+
+            textViewDriverName.setText(otherParticipantName);
+            itemView.setOnClickListener(v -> listener.onItemClick(discussion));
         }
     }
 }

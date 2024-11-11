@@ -54,6 +54,8 @@ public class ClientHome extends AppCompatActivity {
     public void goToDiscussions(View view) {
         // Update this to start DiscussionListActivity instead of ChatActivity
         Intent intent = new Intent(this, DiscussionListActivity.class);
+        intent.putExtra("user",connectedUser);
+        intent.putExtra("token",token);
         startActivity(intent);
     }
 }

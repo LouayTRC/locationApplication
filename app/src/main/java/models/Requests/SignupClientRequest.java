@@ -1,6 +1,6 @@
 package models.Requests;
 
-public class SignupRequest {
+public class SignupClientRequest {
     private String cin;
     private String phone;
     private String email;
@@ -8,7 +8,7 @@ public class SignupRequest {
     private String name;
     private String role;
 
-    public SignupRequest(String cin, String phone, String email, String password, String name, String role) {
+    public SignupClientRequest(String cin, String phone, String email, String password, String name, String role) {
         this.cin = cin;
         this.phone = phone;
         this.email = email;

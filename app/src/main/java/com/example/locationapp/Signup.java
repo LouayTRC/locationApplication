@@ -1,12 +1,13 @@
 package com.example.locationapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Config.RetrofitClient;
-import models.Requests.SignupRequest;
+import models.Requests.SignupClientRequest;
+import models.Requests.SignupDriverRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,9 +29,13 @@ import models.Role;
 
 public class Signup extends AppCompatActivity {
     private EditText cinEditText, nameEditText, emailEditText, phoneEditText, passwordEditText;
-    private Spinner roleSpinner;
+    private Spinner roleSpinner,genderSpinner;
     private Button confirmButton;
-    private TextView roleHint;
+    private TextView roleHint, roleSelectedText;
+    private LinearLayout regionLayout, driverPriceLayout,genderLayout;
+    private EditText regionInput, priceByDayInput;
+    private RelativeLayout buttonLayout; // Add a container for the button
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +49,18 @@ public class Signup extends AppCompatActivity {
         passwordEditText = findViewById(R.id.pwdInput);
         roleSpinner = findViewById(R.id.roleSpinner);
         roleHint = findViewById(R.id.roleHint);
+        roleSelectedText = findViewById(R.id.roleSelectedText);
         confirmButton = findViewById(R.id.confirmButton);
-        TextView roleSelectedText = findViewById(R.id.roleSelectedText);  // Le TextView qui affiche le rôle sélectionné
+        genderSpinner=findViewById(R.id.genderSpinner);
+
+        // Initialize the driver info layouts
+        regionLayout = findViewById(R.id.regionLayout);
+        genderLayout = findViewById(R.id.genderLayout);
+        driverPriceLayout = findViewById(R.id.driverPriceLayout);
+        regionInput = findViewById(R.id.regionInput);
+        priceByDayInput = findViewById(R.id.priceInput);
+
+        buttonLayout = findViewById(R.id.buttonLayout); // Add a reference to the layout holding the button
 
         // Charger les rôles dans le Spinner
         loadRoles();
@@ -63,16 +79,50 @@ public class Signup extends AppCompatActivity {
                 // Obtenez l'élément sélectionné et mettez-le dans le TextView
                 String selectedRole = parentView.getItemAtPosition(position).toString();
                 roleSelectedText.setText("Ton rôle est : " + selectedRole);
+
+                // Show or hide driver-specific fields and adjust button position based on selected role
+                if ("DRIVER".equals(selectedRole)) {
+                    regionLayout.setVisibility(View.VISIBLE);
+                    driverPriceLayout.setVisibility(View.VISIBLE);
+                    genderLayout.setVisibility(View.VISIBLE);
+                    // Move the button below the driverPriceLayout
+                    moveButtonUnder(driverPriceLayout);
+                    displayGenders();
+                } else {
+                    regionLayout.setVisibility(View.GONE);
+                    driverPriceLayout.setVisibility(View.GONE);
+                    genderSpinner.setVisibility(View.GONE);
+                    // Move the button back under the roleLayout
+                    moveButtonUnder(regionLayout);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Si rien n'est sélectionné, vous pouvez définir un texte par défaut
+                // Default action when nothing is selected
                 roleSelectedText.setText("Ton rôle est :");
+                regionLayout.setVisibility(View.GONE);
+                driverPriceLayout.setVisibility(View.GONE);
+                moveButtonUnder(regionLayout);
             }
         });
     }
-
+    public void displayGenders(){
+        List<String> genderNames=new ArrayList<>();
+        genderNames.add("Male");
+        genderNames.add("Female");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Signup.this, android.R.layout.simple_spinner_item, genderNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(adapter);
+    }
+    private void moveButtonUnder(View layoutBelow) {
+        // Remove the button from its current position
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) confirmButton.getLayoutParams();
+        // Adjust the position based on the selected role
+        layoutParams.topMargin = 20; // Optional: Adjust the margin for better spacing
+        layoutParams.addRule(RelativeLayout.BELOW, layoutBelow.getId()); // Set the button below the selected layout
+        confirmButton.setLayoutParams(layoutParams);
+    }
 
     private void loadRoles() {
         RoleService roleService = RetrofitClient.getRetrofitInstance().create(RoleService.class);
@@ -111,40 +161,66 @@ public class Signup extends AppCompatActivity {
         String phone = phoneEditText.getText().toString().trim();
         String pwd = passwordEditText.getText().toString().trim();
         String role = roleSpinner.getSelectedItem().toString(); // Obtenir le rôle sélectionné dans le Spinner
+        String genre= genderSpinner.getSelectedItem().toString();
+        // If role is DRIVER, get additional info
+        String region = regionInput.getText().toString().trim();
+        String priceByDay = priceByDayInput.getText().toString().trim();
 
-        SignupRequest signupRequest = new SignupRequest(cin, phone, email, pwd, name, role);
-
-        AuthService authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
+        // Only proceed if inputs are valid
         if (validateInputs()) {
-            Call<Void> signupCall = authService.signup(signupRequest);
-            signupCall.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        if (role.equals("CLIENT")) {
+            SignupClientRequest signupRequest = new SignupClientRequest(cin, phone, email, pwd, name, role);
+            AuthService authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
+            if ("DRIVER".equals(role)) {
+                // Safely parse priceByDay to avoid NumberFormatException
+                double price = 0;
+                try {
+                    price = Double.parseDouble(priceByDay);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(Signup.this, "Le prix par jour doit être un nombre valide.", Toast.LENGTH_SHORT).show();
+                    return; // Stop the process if price is invalid
+                }
+
+                SignupDriverRequest signupDriverRequest = new SignupDriverRequest(signupRequest, region, price,genre);
+                Call<Void> signupCall = authService.signupD(signupDriverRequest);
+                signupCall.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(Signup.this, "Compte créé avec succès! Vous devez attendre l'accès.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(Signup.this, "Erreur lors de l'inscription : " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(Signup.this, "Erreur réseau : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Call<Void> signupCall = authService.signupC(signupRequest);
+                signupCall.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
                             Toast.makeText(Signup.this, "Compte créé avec succès!", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            Toast.makeText(Signup.this, "Compte créé avec succès! Vous devez attendre l'accès.", Toast.LENGTH_SHORT).show();
-                            finish();
+                            Toast.makeText(Signup.this, "Erreur lors de l'inscription : " + response.message(), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Log.e("SignupLog", "Erreur : " + response.code() + " - " + response.message());
-                        Toast.makeText(Signup.this, "Erreur lors de l'inscription : " + response.message(), Toast.LENGTH_SHORT).show();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("SignupLog", "Échec : " + t.getMessage());
-                    Toast.makeText(Signup.this, "Erreur réseau : " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(Signup.this, "Erreur réseau : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
     private boolean validateInputs() {
-        // Validation des champs comme dans le code original
         if (nameEditText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Nom requis.", Toast.LENGTH_SHORT).show();
             return false;
@@ -164,16 +240,6 @@ public class Signup extends AppCompatActivity {
 
         if (emailEditText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Email requis.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (cinEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "CIN requis.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (roleSpinner.getSelectedItem() == null) {
-            Toast.makeText(this, "Rôle requis.", Toast.LENGTH_SHORT).show();
             return false;
         }
 

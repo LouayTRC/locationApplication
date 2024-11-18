@@ -8,13 +8,9 @@ public class Driver {
     public User user;
     public String region;
     public Double priceByDay;
+    public String genre;
 
-    public Driver(String _id, User user, String region, Double priceByDay) {
-        this._id = _id;
-        this.user = user;
-        this.region = region;
-        this.priceByDay = priceByDay;
-    }
+
 
 
     @Override

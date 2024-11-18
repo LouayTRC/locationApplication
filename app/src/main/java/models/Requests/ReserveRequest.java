@@ -1,16 +1,17 @@
 package models.Requests;
 
+import models.Driver;
 import models.Location;
 
 public class ReserveRequest {
     public String carId;
     public String user;
     public Location location;
-    public boolean driver;
+    public String driver;
     public String dateStart;
     public String dateEnd;
 
-    public ReserveRequest(String car, String user, Location loc, boolean dri, String start, String end) {
+    public ReserveRequest(String car, String user, String start, String end,Location loc, String dri) {
         carId = car;
         this.user = user;
         location = loc;

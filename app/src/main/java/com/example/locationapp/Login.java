@@ -62,7 +62,7 @@ public class Login extends AppCompatActivity {
                         setResult(RESULT_OK,intent);
                         finish(); // Optionally close the activity or redirect
                     } else {
-                        Toast.makeText(Login.this, "Failed to login.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 }
 

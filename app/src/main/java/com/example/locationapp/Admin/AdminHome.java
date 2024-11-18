@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.locationapp.DriversAdmin;
 import com.example.locationapp.R;
 
 public class AdminHome extends AppCompatActivity {
@@ -33,6 +34,11 @@ public class AdminHome extends AppCompatActivity {
 
     public void goToReservationsAdmin(View view){
         Intent intent=new Intent(this,ReservationList.class);
+        startActivity(intent);
+    }
+
+    public void goToDriversAdmin(View view){
+        Intent intent=new Intent(this, DriversAdmin.class);
         startActivity(intent);
     }
 }

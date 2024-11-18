@@ -9,34 +9,47 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.example.locationapp.R;
-import com.example.locationapp.Signup;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.util.GeoPoint;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import Config.RetrofitClient;
+import models.Driver;
 import models.Location;
+import models.Requests.AvailabilityRequest;
 import models.Requests.ReserveRequest;
 import models.Reservation;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import services.CarService;
+import services.DriverService;
 import services.PictureService;
 import services.PictureServiceImpl;
 import services.ReservationService;
@@ -47,17 +60,20 @@ public class FirstReservation extends AppCompatActivity {
     private TextView startDateDisplay, endDateDisplay, latitudeDisplay, longitudeDisplay;
     private MapView mapView;
     private MyLocationNewOverlay myLocationOverlay;
-    private Marker currentLocationMarker; // Marker for current location
+    private Marker currentLocationMarker;
     private boolean deliveryYes;
-    private boolean driverYes;// Flag to check delivery option
+    private boolean driverYes;
     private LinearLayout locationView;
-
+    private Spinner driverSpinner;
+    private List<Driver> availableDrivers;
+    private String startDate = "", endDate = "";
     private TextView carModel;
     private ImageView image;
     private GeoPoint startingLocation;
     private GeoPoint latestSelectedLocation;
     private User connectedUser;
     private String token;
+    private LinearLayout deliveryLayout;  // Add deliveryLayout here to adjust dynamically
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -66,42 +82,36 @@ public class FirstReservation extends AppCompatActivity {
         Configuration.getInstance().load(this, getPreferences(MODE_PRIVATE));
         setContentView(R.layout.activity_first_reservation);
 
-        Intent intent=getIntent();
-
-        // Initialize TextViews
         startDateDisplay = findViewById(R.id.startDateInput);
         endDateDisplay = findViewById(R.id.endDateInput);
         latitudeDisplay = findViewById(R.id.latitudeDisplay);
         longitudeDisplay = findViewById(R.id.longitudeDisplay);
-        locationView=findViewById(R.id.locationlayout);
+        locationView = findViewById(R.id.locationlayout);
         locationView.setVisibility(View.GONE);
         mapView = findViewById(R.id.mapView);
+        driverSpinner = findViewById(R.id.driverSpinner);
+        deliveryLayout = findViewById(R.id.deliveryLayout);  // Initialize deliveryLayout here
 
-
+        getAvailableDrivers();
         getAndDisplayCar();
 
-        // Initialize Zoom Buttons
         Button zoomInButton = findViewById(R.id.zoomInButton);
         Button zoomOutButton = findViewById(R.id.zoomOutButton);
 
-        // Set date from extras
         setDateFromExtras();
 
-        // Initialize MyLocationOverlay
         myLocationOverlay = new MyLocationNewOverlay(mapView);
         mapView.getOverlays().add(myLocationOverlay);
 
-        // Request location permission if not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         } else {
             myLocationOverlay.enableMyLocation();
         }
 
-        // Handle delivery options
         RadioGroup deliveryGroup = findViewById(R.id.deliveryGroup);
         deliveryGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            deliveryYes = checkedId == R.id.deliveryYes; // Set delivery flag
+            deliveryYes = checkedId == R.id.deliveryYes;
             if (deliveryYes) {
                 showMap();
             } else {
@@ -111,19 +121,38 @@ public class FirstReservation extends AppCompatActivity {
 
         RadioGroup driverGroup = findViewById(R.id.driverGroup);
         driverGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            driverYes = checkedId == R.id.driverYes; // Set driver flag
+            driverYes = checkedId == R.id.driverYes;
+
+            if (driverYes) {
+                // Show the driver select layout
+                findViewById(R.id.driverSelectLayout).setVisibility(View.VISIBLE);
+
+                // Dynamically adjust the deliveryLayout to come after driverSelectLayout
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) deliveryLayout.getLayoutParams();
+                params.topToBottom = R.id.driverSelectLayout; // Set the delivery layout below driverSelectLayout
+                deliveryLayout.setLayoutParams(params);
+
+                // Populate the driver spinner with available drivers
+                if (availableDrivers != null && !availableDrivers.isEmpty()) {
+                    populateDriverSpinner();  // Populate the spinner here
+                }
+            } else {
+                // Hide the driver select layout when driverYes is not selected
+                findViewById(R.id.driverSelectLayout).setVisibility(View.GONE);
+
+                // Adjust deliveryLayout's position to go back to its previous position
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) deliveryLayout.getLayoutParams();
+                params.topToBottom = R.id.driverLayout; // Move back deliveryLayout under driverLayout
+                deliveryLayout.setLayoutParams(params);
+            }
         });
 
-        // Set touch listener on the map to change location
-        mapView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    GeoPoint newLocation = (GeoPoint) mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
-                    updateLocation(newLocation);
-                }
-                return true; // Return true to indicate the touch event was handled
+        mapView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                GeoPoint newLocation = (GeoPoint) mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
+                updateLocation(newLocation);
             }
+            return true;
         });
 
         Button updateLocationButton = findViewById(R.id.btnCurrentLocation);
@@ -135,56 +164,93 @@ public class FirstReservation extends AppCompatActivity {
                 Toast.makeText(this, "Starting location not set", Toast.LENGTH_SHORT).show();
             }
         });
-        // Zoom in and out button listeners
+
         zoomInButton.setOnClickListener(v -> zoomIn());
         zoomOutButton.setOnClickListener(v -> zoomOut());
 
         Button submitButton = findViewById(R.id.reserveButton);
-        submitButton.setOnClickListener(v -> {
-            reserveCar();
-        });
+        submitButton.setOnClickListener(v -> reserveCar());
     }
-    private void getAndDisplayCar(){
-        carModel=findViewById(R.id.carName);
-        Intent intent=getIntent();
-        carModel.setText(intent.getStringExtra("model"));
 
-        image=findViewById(R.id.carImage);
+    private void getAndDisplayCar() {
+        carModel = findViewById(R.id.carName);
+        Intent intent = getIntent();
+        carModel.setText(intent.getStringExtra("model"));
+        connectedUser = intent.getParcelableExtra("user");
+        token = intent.getStringExtra("token");
+
+        image = findViewById(R.id.carImage);
         String encodedImage = intent.getStringExtra("picture");
         if (encodedImage != null) {
             setImageFromEncodedString(encodedImage);
         } else {
-            image.setImageResource(R.drawable.car1); // Default image
+            image.setImageResource(R.drawable.car1);
+        }
+    }
+
+    public void getAvailableDrivers() {
+        Intent intent = getIntent();
+        startDate = intent.getStringExtra("startDate");
+        endDate = intent.getStringExtra("endDate");
+
+        AvailabilityRequest request = new AvailabilityRequest(startDate, endDate);
+        DriverService driverService = RetrofitClient.getRetrofitInstance().create(DriverService.class);
+        Call<List<Driver>> driversCall = driverService.getAvailableDrivers(request);
+
+        driversCall.enqueue(new Callback<List<Driver>>() {
+            @Override
+            public void onResponse(Call<List<Driver>> call, Response<List<Driver>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    availableDrivers = response.body();
+                    // Populate the spinner after retrieving the drivers
+                    if (driverYes) {
+                        populateDriverSpinner();
+                    }
+                } else {
+                    Toast.makeText(FirstReservation.this, "Error retrieving available drivers", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Driver>> call, Throwable t) {
+                Toast.makeText(FirstReservation.this, "Unable to load drivers. Please try again later.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void populateDriverSpinner() {
+        List<String> driverNamesWithRegions = new ArrayList<>();
+        for (Driver driver : availableDrivers) {
+            driverNamesWithRegions.add(driver.user.name + " (" + driver.region + ")"+ "      "+"priceByDay="+driver.priceByDay);
         }
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, driverNamesWithRegions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        driverSpinner.setAdapter(adapter);
     }
+
     private void setImageFromEncodedString(String encodedImage) {
         try {
-            PictureService pictureService= new PictureServiceImpl();
+            PictureService pictureService = new PictureServiceImpl();
             Bitmap decodedBitmap = pictureService.decompressBase64ToImage(encodedImage);
             image.setImageBitmap(decodedBitmap);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, "Error decoding image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-    private void setDateFromExtras() {
-        Intent intent = getIntent();
-        String startDate = intent.getStringExtra("startDate");
-        String endDate = intent.getStringExtra("endDate");
 
+    private void setDateFromExtras() {
         startDateDisplay.setText(startDate != null ? startDate : "");
         endDateDisplay.setText(endDate != null ? endDate : "");
     }
 
     private void showMap() {
         locationView.setVisibility(LinearLayout.VISIBLE);
-
         if (myLocationOverlay.getMyLocation() != null) {
-            updateLocationDisplays(myLocationOverlay.getMyLocation());
             GeoPoint geoPoint = new GeoPoint(myLocationOverlay.getMyLocation());
             if (startingLocation == null) {
                 startingLocation = geoPoint;
-                latestSelectedLocation=geoPoint;
+                latestSelectedLocation = geoPoint;
             }
             mapView.getController().setZoom(15.0);
             mapView.getController().setCenter(geoPoint);
@@ -196,104 +262,69 @@ public class FirstReservation extends AppCompatActivity {
     }
 
     private void updateLocationDisplays(GeoPoint location) {
-        latitudeDisplay.setText(String .valueOf(location.getLatitude()));
-        longitudeDisplay.setText(String .valueOf(location.getLongitude()));
+        latitudeDisplay.setText(String.valueOf(location.getLatitude()));
+        longitudeDisplay.setText(String.valueOf(location.getLongitude()));
 
         if (currentLocationMarker == null) {
-            // Initialize and add a marker for the current location
             currentLocationMarker = new Marker(mapView);
             currentLocationMarker.setTitle("Current Location");
-            currentLocationMarker.setDraggable(true);
             mapView.getOverlays().add(currentLocationMarker);
         }
-
-        // Update the marker position and the map center
         currentLocationMarker.setPosition(location);
-        mapView.getController().setCenter(location);
         mapView.invalidate();
     }
 
     private void updateLocation(GeoPoint newLocation) {
-        if (currentLocationMarker != null) {
-            currentLocationMarker.setPosition(newLocation);
-            updateLocationDisplays(newLocation);
-            mapView.invalidate();
-            latestSelectedLocation = newLocation;
-        }
+        latestSelectedLocation = newLocation;
+        updateLocationDisplays(newLocation);
     }
 
-    // Method to zoom in
     private void zoomIn() {
-        double currentZoom = mapView.getZoomLevelDouble();
-        mapView.getController().setZoom(currentZoom + 1);
+        mapView.getController().zoomIn();
     }
 
-    // Method to zoom out
     private void zoomOut() {
-        double currentZoom = mapView.getZoomLevelDouble();
-        mapView.getController().setZoom(currentZoom - 1);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-        myLocationOverlay.enableMyLocation();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        myLocationOverlay.disableMyLocation();
-        mapView.onDetach();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                myLocationOverlay.enableMyLocation();
-            } else {
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
+        mapView.getController().zoomOut();
     }
 
     private void reserveCar() {
         String startDate = startDateDisplay.getText().toString();
-        String endDate = endDateDisplay.getText().toString(); // Assume driver is required or retrieved from your logic
+        String endDate = endDateDisplay.getText().toString();
         Double deliveryLongitude = null;
         Double deliveryLatitude = null;
-        Location location=null;
+        Location location = null;
+
         // Check if delivery is enabled to pass location or null values
-        if (this.deliveryYes) {
+        if (this.deliveryYes && latestSelectedLocation != null) {
             deliveryLongitude = latestSelectedLocation.getLongitude();
             deliveryLatitude = latestSelectedLocation.getLatitude();
 
             if (!Double.isNaN(deliveryLongitude) && !Double.isNaN(deliveryLatitude)) {
                 location = new Location(deliveryLatitude, deliveryLongitude);
             } else {
-                location = null; // Or set to a default location if needed
+                location = null; // Set to a default location if needed
             }
         }
-        Intent oldIntent=getIntent();
 
-        User user=oldIntent.getParcelableExtra("user");
-        Log.d("reservation",user.toString());
-        String carId=oldIntent.getStringExtra("carId");
+        Intent oldIntent = getIntent();
+        User user = oldIntent.getParcelableExtra("user");
+        Log.d("reservation", user.toString());
+        String carId = oldIntent.getStringExtra("carId");
+
+        // Determine the driver ID to use in the reservation
+        String driverId = null;
+        if (driverYes) {
+            int selectedPosition = driverSpinner.getSelectedItemPosition();
+            if (selectedPosition != AdapterView.INVALID_POSITION && selectedPosition < availableDrivers.size()) {
+                driverId = availableDrivers.get(selectedPosition).user._id;
+            }
+        }
 
         // Create Reservation object
-        ReserveRequest reservation = new ReserveRequest(carId, user._id, location, driverYes,startDate,endDate);
+        ReserveRequest reservation = new ReserveRequest(carId, user._id, startDate, endDate,location, driverId);
 
         ReservationService reservationService = RetrofitClient.getRetrofitInstance().create(ReservationService.class);
-        Log.d("request reservation:",reservation.toString());
+        Log.d("request reservation:", reservation.toString());
 
         Call<Reservation> reservationCall = reservationService.reserver(reservation);
         reservationCall.enqueue(new Callback<Reservation>() {
@@ -319,6 +350,7 @@ public class FirstReservation extends AppCompatActivity {
                 Toast.makeText(FirstReservation.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }
+
+

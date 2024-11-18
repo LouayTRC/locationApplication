@@ -11,6 +11,7 @@ public class User implements Parcelable {
     public String phone;
     public String password;
     public Role role;
+    public Integer status;
 
     public User(String cin, String name, String email, String phone, Role role) {
         this.cin = cin;
